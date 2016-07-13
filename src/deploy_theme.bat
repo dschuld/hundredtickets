@@ -1,1 +1,0 @@
-"C:\Program Files (x86)\WinSCP\WinSCP.exe" /privatekey=D:/Benutzer-Profile/schuldd/wp_rsa_s11-wp.ppk /script=upload_theme.winscp

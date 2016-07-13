@@ -1,18 +1,11 @@
 {
-    "fusionTableApiKey": "AIzaSyC_tzVeeSDTTQYAIstEIknMEoJ1l3IlUFE",
+    "fusionTableApiKey": "REPLACE-WITH-DEV-KEY",
     "routeDataTableId": "1U5H9ouyGCxTs1MjfpTIboa14-wHWryIhb0mToSEG",
     "regionDataTableId": "1Xbnhuxp1Xz0wgaX60sH3FE5JH4CLU_RKDt4pVQ07",
     "placeDataTableId": "1taQ98kHnAJUNuDhV09UPpLWfznLM2jiUJGCyJJ-l",
     "regions": {
         "color": "#666666"
     },
-    "routes": [{
-            "name": "plannedRoute",
-            "color": "#555555"
-        }, {
-            "name": "actualRoute",
-            "color": "#0000DD"
-        }],
     "initCenter": [58.0078125, 37.5794125],
     "initZoom": 4,
     "flickrId": "134819556@N06",

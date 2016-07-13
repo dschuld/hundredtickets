@@ -87,28 +87,10 @@ gulp.task('htmlmin', function () {
             .pipe(gulp.dest('./../dist/'));
 });
 
-gulp.task('deploy-local-prod', function () {
-    return gulp.src(['./../dist/**'])
-            .pipe(changed('C:/wamp/www/map'))
-            .pipe(gulp.dest('C:/wamp/www/map'));
-});
-
-
-
-gulp.task('deploy-local-dev', function () {
-    gulp.src(['./../dist/**'])
-            .pipe(changed('C:/wamp/www/map'))
-            .pipe(gulp.dest('C:/wamp/www/map'));
-
-    return  gulp.src(['./tripOptions.json'])
-            .pipe(gulp.dest('C:/wamp/www/map'));
-});
-
-
 /*
- * Deploys the uglified sources and the prod config to the wordpress theme for stage testing
+ * Deploys the uglified sources to the wordpress theme
  */
-gulp.task('deploy-wordpress-staging', ['default'], function () {
+gulp.task('deploy-wordpress-prod', ['default'], function () {
     gulp.src(['./../dist/all.js', './../dist/tripOptions.json'])
             .pipe(gulp.dest(LOCAL_WORDPRESS_THEME_DIR + '/js'));
 
@@ -119,9 +101,9 @@ gulp.task('deploy-wordpress-staging', ['default'], function () {
 
 
 /*
- * Deploys the non-uglified sources and the test config to the wordpress theme for testing
+ * Deploys the non-uglified sources to the wordpress theme 
  */
-gulp.task('deploy-wordpress-test', ['scripts-non-ugly'], function () {
+gulp.task('deploy-wordpress-test', ['scripts-non-ugly', 'conf'], function () {
     gulp.src(['./../dist/all.js'])
             .pipe(changed(LOCAL_WORDPRESS_THEME_DIR + '/js'))
             .pipe(gulp.dest(LOCAL_WORDPRESS_THEME_DIR + '/js'));
@@ -129,7 +111,7 @@ gulp.task('deploy-wordpress-test', ['scripts-non-ugly'], function () {
     gulp.src(['./maps-style.css'])
             .pipe(gulp.dest(LOCAL_WORDPRESS_THEME_DIR));
 
-    return  gulp.src([CONF_TEST])
+    return  gulp.src(['./../dist/tripOptions.json'])
             .pipe(gulp.dest(LOCAL_WORDPRESS_THEME_DIR + '/js'));
 });
 
