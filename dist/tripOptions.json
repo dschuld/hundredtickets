@@ -1,0 +1,21 @@
+{
+    "fusionTableApiKey": "AIzaSyC_tzVeeSDTTQYAIstEIknMEoJ1l3IlUFE",
+    "routeDataTableId": "1UqxlyjIFmcoIYD_Cu_Yidw9JO69p0WEGapXnmGCX",
+    "regionDataTableId": "1Nciri6VdPgCEaHb-M8SUaBtExakG09H86Ql88TK6",
+    "placeDataTableId": "1ur6Lmvjvp6VZRZrEZu4KA9xJ_MFu47THOeFQxl0F",
+    "regions": {
+        "color": "#666666"
+    },
+    "routes": [{
+            "name": "plannedRoute",
+            "color": "#555555"
+        }, {
+            "name": "actualRoute",
+            "color": "#0000DD"
+        }],
+    "initCenter": [58.0078125, 37.5794125],
+    "initZoom": 4,
+    "flickrId": "134819556@N06",
+    "flickrTag": "map"
+
+}

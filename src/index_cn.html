@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <!-- TODO When in China, it has to be http://maps.google.cn -->
+        <!-- Use v=3? Current release has large zoom controls -->
+        <script src="http://maps.google.cn/maps/api/js?key=AIzaSyC_tzVeeSDTTQYAIstEIknMEoJ1l3IlUFE&libraries=geometry"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script src="all.js"></script>
+    </head>
+
+    <body>
+        <style type="text/css">
+            html,
+            body {
+                height: 100%;
+                width: 100%;
+                margin: auto;
+                padding: 0;
+            }
+
+            div#googleMap {
+                height: 100%;
+                <!-- position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: auto;
+                -->
+            }
+            }
+        </style>
+        <div id="googleMap"></div>
+    </body>
+</html>

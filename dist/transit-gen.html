@@ -1,0 +1,113 @@
+<!DOCTYPE html><!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+--><html><head><!-- TODO When in China, it has to be http://maps.google.cn --><!-- Use v=3? Current release has large zoom controls --><script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC_tzVeeSDTTQYAIstEIknMEoJ1l3IlUFE&libraries=geometry"></script><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script><script src="all.js"></script><script>function initialize() {
+
+                //TODO keep somewhere else
+                var mapsApiKey = 'AIzaSyC_tzVeeSDTTQYAIstEIknMEoJ1l3IlUFE';
+                var dataTableId = '1U5H9ouyGCxTs1MjfpTIboa14-wHWryIhb0mToSEG';
+
+
+
+                var mapProp = {
+                    center: new google.maps.LatLng(40.1035480, 65.6584010),
+                    zoom: 3,
+                    mapTypeId: google.maps.MapTypeId.TERRAIN,
+                    rotateControl: false,
+                    mapTypeControl: true,
+                    mapTypeControlOptions: {
+                        style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+                        position: google.maps.ControlPosition.TOP_LEFT,
+                        mapTypeIds: [
+                            google.maps.MapTypeId.SATELLITE,
+                            google.maps.MapTypeId.TERRAIN
+                        ]
+
+                    },
+                    streetViewControl: false,
+                    zoomControl: true,
+                    zoomControlOptions: {
+                        position: google.maps.ControlPosition.LEFT_CENTER
+                    },
+                    scaleControl: true,
+                    streetViewControlOptions: {
+                        position: google.maps.ControlPosition.LEFT_TOP
+                    }
+
+                };
+
+                var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+
+                var directionsService = new google.maps.DirectionsService;
+
+                var route = new s11.geomodel.Route("#0000DD");
+
+                document.getElementById('routeButton').addEventListener('click', function () {
+                    var newMap = map;
+                    route.clear();
+                    var string = document.getElementById('routeText').value;
+                    var waypoints = string.split(",");
+                    route.addLegFromDirectionsService(directionsService, waypoints, mapModeToTravelMode(document.getElementById('mode').value));
+                    route.setMap(newMap);
+                });
+
+
+                document.getElementById('removeButton').addEventListener('click', function () {
+                    route.clear();
+                });
+
+                document.getElementById('fillButton').addEventListener('click', function () {
+                    var legs = route.getLegs();
+                    var encodedPath = s11.util.encodePath(legs[0].getPath());
+                    document.getElementById('path').value = encodedPath; 
+                })
+
+                document.getElementById('insertButton').addEventListener('click', function () {
+                    var type = document.getElementById('type').value;
+                    var name = document.getElementById('name').value;
+                    var text = document.getElementById('text').value;
+                    var link = document.getElementById('link').value;
+                    var path = document.getElementById('path').value;
+                    s11.data.insert(type, 0, name, text, link, 0, path);
+                })
+
+                document.getElementById('jsonToEncdodedButton').addEventListener('click', function () {
+                    var jsonString = document.getElementById('jsonpath').value;
+                    var encodedPath = s11.util.encodePathFromGeoJsonString(jsonString);
+                    document.getElementById('path').value = encodedPath;
+                })
+            }
+
+            function mapModeToTravelMode(mode) {
+                switch (mode) {
+                    case "transit":
+                        return google.maps.TravelMode.TRANSIT;
+                    case "driving":
+                        return google.maps.TravelMode.DRIVING;
+                    case "bicycling":
+                        return google.maps.TravelMode.BICYCLING;
+                    case "walking":
+                        return google.maps.TravelMode.WALKING;
+                    default:
+                        return google.maps.TravelMode.DRIVING;
+                }
+            }
+
+
+
+            //Using callback ín API load instead, but then map is not reliably adjusted to path?
+            google.maps.event.addDomListener(window, 'load', initialize);</script></head><body><style type="text/css">html,
+            body {
+                height: 75%;
+                width: 100%;
+                margin: auto;
+                padding: 0;
+            }
+
+            div#googleMap {
+                height: 100%;
+            }
+            }</style><div id="googleMap"></div><div style="width: 50%; float:left">Route<input type="text" name="name" value="" id="routeText"><br>type<select name="mode" id="mode"><option value="transit">TRANSIT</option><option value="driving">DRIVING</option><option value="bicycling">CYCLING</option><option value="walking">WALKING</option></select><br><button type="button" id="routeButton">Show Route</button><br><button type="button" id="fillButton">Fill Path</button><br><button type="button" id="removeButton">Remove Route</button><br><button type="button" id="insertButton">INSERT</button><br><button type="button" id="jsonToEncdodedButton">Encode JSON Path</button><br><textarea rows="20" cols="50" id="jsonpath">
+            </textarea></div><div style="width: 50%; float:right">type<select name="type" id="type"><option value="40">Route</option><option value="30">POI</option><option value="20">Province</option><option value="10">Country</option></select><br>name<input type="text" name="name" value="" id="name"><br>text<input type="text" name="text" value="" id="text"><br>link<input type="text" name="link" value="" id="link"><br>Path<br><textarea rows="20" cols="50" id="path">
+            </textarea></div></body></html>

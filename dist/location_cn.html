@@ -1,0 +1,130 @@
+<!DOCTYPE html><!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+--><html><head><!-- TODO When in China, it has to be http://maps.google.cn --><!-- Use v=3? Current release has large zoom controls --><script src="http://maps.google.cn/maps/api/js?key=AIzaSyC_tzVeeSDTTQYAIstEIknMEoJ1l3IlUFE&libraries=geometry"></script><script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script><script>var locationServiceUrl = "https://big-vertex-117210.appspot.com/location";
+            var mapProp = {
+                center: new google.maps.LatLng(40.1035480, 65.6584010),
+                zoom: 3,
+                mapTypeId: google.maps.MapTypeId.TERRAIN,
+                rotateControl: false,
+                mapTypeControl: true,
+                mapTypeControlOptions: {
+                    style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+                    position: google.maps.ControlPosition.TOP_LEFT,
+                    mapTypeIds: [
+                        google.maps.MapTypeId.SATELLITE,
+                        google.maps.MapTypeId.TERRAIN
+                    ]
+
+                },
+                streetViewControl: false,
+                zoomControl: true,
+                zoomControlOptions: {
+                    position: google.maps.ControlPosition.LEFT_CENTER
+                },
+                scaleControl: true,
+                streetViewControlOptions: {
+                    position: google.maps.ControlPosition.LEFT_TOP
+                }
+
+            };
+
+            var map;
+
+            var locationMarker;
+
+
+            function initialize() {
+
+                map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+
+                document.getElementById('post').addEventListener('click', function () {
+
+                    var lat = document.getElementById('lat').value;
+                    var lng = document.getElementById('lng').value
+                    $.post(locationServiceUrl,
+                            {
+                                "locationLat": lat,
+                                "locationLng": lng
+                            }
+
+                    , function (data, status) {
+                        if (status === 'success') {
+                            alert("Posted data");
+                        }
+                    });
+                });
+
+
+                document.getElementById('delete').addEventListener('click', function () {
+                    $.ajax({
+                        url: locationServiceUrl,
+                        type: 'DELETE',
+                        success: function (data, status) {
+                            if (status === 'success') {
+                                alert("Deleted data");
+                            }
+                        }
+                    });
+                });
+
+                document.getElementById('getloc').addEventListener('click', function () {
+                    getLocation();
+
+                });
+
+                google.maps.event.addListener(map, 'click', setPositionFromMap);
+            }
+
+
+
+
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(setPositionFromLocation);
+                } else {
+                    alert("Geolocation is not supported by this browser.");
+                }
+            }
+
+            function setPositionFromMap(e) {
+                setPosition(e.latLng.lat(), e.latLng.lng());
+            }
+
+            function setPositionFromLocation(position) {
+                setPosition(position.coords.latitude, position.coords.longitude);
+            }
+
+            function setPosition(lat, lng) {
+                document.getElementById('lat').value = lat;
+                document.getElementById('lng').value = lng;
+                var pos = new google.maps.LatLng(lat, lng);
+
+                if (!locationMarker) {
+                    locationMarker = new google.maps.Marker({
+                        map: map
+                    });
+                }
+                
+                locationMarker.setPosition(pos);
+
+                map.setCenter(pos);
+                map.setZoom(12);
+
+            }
+
+
+            //Using callback ín API load instead, but then map is not reliably adjusted to path?
+            google.maps.event.addDomListener(window, 'load', initialize);</script></head><body><style type="text/css">html,
+            body {
+                height: 75%;
+                width: 100%;
+                margin: auto;
+                padding: 0;
+            }
+
+            div#googleMap {
+                height: 100%;
+            }
+            }</style><div id="googleMap"></div><div style="width: 50%; float:left">Lat<input type="text" name="lat" value="" id="lat"><br>Lng<input type="text" name="lng" value="" id="lng"><br><button type="button" id="post">Post Location</button><br><button type="button" id="delete">Delete Locations</button><br><button type="button" id="getloc">Get Location</button><br></div><div style="width: 50%; float:right"></div></body></html>
