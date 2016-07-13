@@ -208,7 +208,7 @@ var factory = {
         });
         registerMapType(map, outdoorsMap, s11.util.MapTypeId.OUTDOORS);
 
-        map.setMapTypeId(s11.util.MapTypeId.MAPBOX_CUST_OUT);
+        map.setMapTypeId(google.maps.MapTypeId.TERRAIN);
 
         return map;
     }

@@ -75,7 +75,7 @@ s11.pluginLoader.addPlugin(helpControl_PLUGIN_ID, function (data) {
 
     var aboutWindowContent = appendDiv(aboutWindowDiv, "about-window-content", ["about-window-content"]);
 
-    aboutWindowContent.html("This website is about my trip from Frankfurt to Southern Asia. You can read a <a href='#'>blog post</a> for more info about the trip.<p>You can use the map to look at the route that I am taking, the places I have been to, photos, and a lot more. Many items on the map are clickable and show you some info or pictures. Somethimes there is also a corresponding blog post, which will be loaded when you click the 'Continue Reading' link.<p>The route I have already travelled is shown in blue, the route I am planning to travel in the future is shown in gray, and the 'Find Me' button on the top of the map shows the place where I am right now.<br>When you move the cursor over a country or region that is part of my trip, you can see the region highlighted. You can double click to center the map on that region then.<p>If you just want to look at the blog posts without the map, click 'Hide Map' in the menu bar or scroll down in the area below the map. To show the map again, click 'Show Map' or scroll to the top of the page.<p>If you are interested in the technical aspects, have a look at <a href='#'>the posts</a> I wrote about how I developed the website.");
+    aboutWindowContent.html("This website is about my trip from Frankfurt to Southern Asia. You can read a <a href='#'>blog post</a> for more info about the trip.<p>You can use the map to look at the route that I am taking, the places I have been to, photos, and a lot more. Many items on the map are clickable and show you some info or pictures. Somethimes there is also a corresponding blog post, which will be loaded when you click the 'Continue Reading' link.<p>The route I have already travelled is shown in blue, the route I am planning to travel in the future is shown in gray, and the 'Find Me' button on the top of the map shows the place where I am right now.<br>When you move the cursor over a country or region that is part of my trip, you can see the region highlighted. You can double click to center the map on that region then.<p>If you just want to look at the blog posts without the map, click 'Hide Map' in the menu bar or scroll down in the area below the map. To show the map again, click 'Show Map' or scroll to the top of the page.<p>If you are interested in the technical aspects, have a look at <a href='http://hundredtickets.net/category/technology' class='menu-item-object-category'>the posts</a> I wrote about how I developed the website.");
 
 
 
@@ -84,9 +84,7 @@ s11.pluginLoader.addPlugin(helpControl_PLUGIN_ID, function (data) {
     var aboutWindowCloseButton = appendDiv(aboutWindowFooter, "about-window-close-button", ["about-window-button"]);
     aboutWindowCloseButton.html("<a href='#'>Close</a>");
     appendDiv(aboutWindowFooter, "about-window-divider-2", ["about-window-button"]);
-//    var aboutWindowMoreLink = appendDiv(aboutWindowFooter, "about-window-more-link", ["about-window-button"]);
-//    aboutWindowMoreLink.html("<a href='#'>Read More..</a>");
-//    appendDiv(aboutWindowFooter, "about-window-divider-3", ["about-window-button"]);
+
 
     aboutWindowCloseButton.click(function () {
         $("#about-window").css({
