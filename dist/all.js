@@ -3143,14 +3143,10 @@ var factory = {
     encodePath: function (path) {
         return google.maps.geometry.encoding.encodePath(path);
     },
-    createMap: function (lat, lng, zoom, mapDivId, mapboxKey) {
+    createMap: function (lat, lng, zoom, mapDivId, mapboxKey, styles) {
         if (!zoom) {
             zoom = 3;
-        }
-
-        //TODO config on server
-        var styles = [{"featureType": "poi", "elementType": "labels", "stylers": [{"visibility": "off"}]}, {"featureType": "transit.station", "stylers": [{"visibility": "off"}]}, {"featureType": "administrative", "elementType": "geometry.stroke", "stylers": [{"visibility": "on"}, {"weight": 0.5}]}, {"featureType": "road", "elementType": "labels.icon", "stylers": [{"visibility": "off"}]}, {"featureType": "landscape", "elementType": "labels", "stylers": [{"visibility": "off"}]}];
-
+        }        
 
         var mapProp = {
             center: new google.maps.LatLng(lat, lng),
@@ -3162,20 +3158,20 @@ var factory = {
                 style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
                 position: google.maps.ControlPosition.TOP_LEFT,
                 mapTypeIds: [
-                    google.maps.MapTypeId.SATELLITE,
+//                    google.maps.MapTypeId.SATELLITE,
                     google.maps.MapTypeId.TERRAIN,
 //                    s11.util.MapTypeId.OSM,
 //                    s11.util.MapTypeId.HIKEBIKE,
 //                    s11.util.MapTypeId.LANDSCAPE,
-                    s11.util.MapTypeId.MAPBOX,
-                    s11.util.MapTypeId.MAPBOX_SATELLITE,
-                    s11.util.MapTypeId.MAPBOX_STREETS,
-                    s11.util.MapTypeId.MAPBOX_OUTDOORS,
-                    s11.util.MapTypeId.MAPBOX_CUST,
-                    s11.util.MapTypeId.MAPBOX_CUST_OUT,
-                    s11.util.MapTypeId.PIONEER,
-                    s11.util.MapTypeId.OTM,
-                    s11.util.MapTypeId.OUTDOORS
+//                    s11.util.MapTypeId.MAPBOX,
+//                    s11.util.MapTypeId.MAPBOX_SATELLITE,
+//                    s11.util.MapTypeId.MAPBOX_STREETS,
+//                    s11.util.MapTypeId.MAPBOX_OUTDOORS,
+//                    s11.util.MapTypeId.MAPBOX_CUST,
+//                    s11.util.MapTypeId.PIONEER,
+//                    s11.util.MapTypeId.OTM,
+//                    s11.util.MapTypeId.OUTDOORS,
+                    s11.util.MapTypeId.MAPBOX_CUST_OUT
 
 
 
@@ -3201,6 +3197,11 @@ var factory = {
 
 
 
+        var mapboxMap = createMapTypeOptions("Mapbox-Cust-Out", function (coord, zoom) {
+            return "https://api.mapbox.com/styles/v1/dschuld/cip57q2p9000hdiluvwbmnoqp/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=" + mapboxKey;
+        });
+        registerMapType(map, mapboxMap, s11.util.MapTypeId.MAPBOX_CUST_OUT);
+
 
         //TODO include attribution div on map, see http://www.thunderforest.com/terms/
 //        var osmOptions = createMapTypeOptions("OSM", function (coord, zoom) {
@@ -3219,60 +3220,53 @@ var factory = {
 //            return "https://a.tile.thunderforest.com/landscape/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
 //        });
 //        registerMapType(map, landscapeOptions, s11.util.MapTypeId.LANDSCAPE);
-
-
-
-
-        var pioneerMap = createMapTypeOptions("Pioneer", function (coord, zoom) {
-            return "https://a.tile.thunderforest.com/pioneer/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
-        });
-        registerMapType(map, pioneerMap, s11.util.MapTypeId.PIONEER);
-
-
-        var mapboxMap = createMapTypeOptions("Mapbox", function (coord, zoom) {
-            return "https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=pk.eyJ1IjoiZHNjaHVsZCIsImEiOiJjaXA4Mm5xazkwMDJwdXRubXBxa25peTV4In0.uCnPaGteG5-H80uO13RiOw";
-        });
-        registerMapType(map, mapboxMap, s11.util.MapTypeId.MAPBOX);
-
-
-        var mapboxMap = createMapTypeOptions("Mapbox-Sat", function (coord, zoom) {
-            return "https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=pk.eyJ1IjoiZHNjaHVsZCIsImEiOiJjaXA4Mm5xazkwMDJwdXRubXBxa25peTV4In0.uCnPaGteG5-H80uO13RiOw";
-        });
-        registerMapType(map, mapboxMap, s11.util.MapTypeId.MAPBOX_SATELLITE);
-
-
-        var mapboxMap = createMapTypeOptions("Mapbox-Streets", function (coord, zoom) {
-            return "https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=" + mapboxKey;
-        });
-        registerMapType(map, mapboxMap, s11.util.MapTypeId.MAPBOX_STREETS);
-
-        var mapboxMap = createMapTypeOptions("Mapbox-Outdoors", function (coord, zoom) {
-            return "https://api.mapbox.com/styles/v1/mapbox/outdoors-v9/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=" + mapboxKey;
-        });
-        registerMapType(map, mapboxMap, s11.util.MapTypeId.MAPBOX_OUTDOORS);
-
-        var mapboxMap = createMapTypeOptions("Mapbox-Cust", function (coord, zoom) {
-            return "https://api.mapbox.com/styles/v1/dschuld/cip80f3cr0023cunsqdt0leuz/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=" + mapboxKey;
-        });
-        registerMapType(map, mapboxMap, s11.util.MapTypeId.MAPBOX_CUST);
-
-
-
-        var mapboxMap = createMapTypeOptions("Mapbox-Cust-Out", function (coord, zoom) {
-            return "https://api.mapbox.com/styles/v1/dschuld/cip57q2p9000hdiluvwbmnoqp/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=" + mapboxKey;
-        });
-        registerMapType(map, mapboxMap, s11.util.MapTypeId.MAPBOX_CUST_OUT);
-
-        var openTopoMap = createMapTypeOptions("OpenTopoMap", function (coord, zoom) {
-            return "https://a.tile.opentopomap.org/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
-        });
-        registerMapType(map, openTopoMap, s11.util.MapTypeId.OTM);
-
-
-        var outdoorsMap = createMapTypeOptions("Outdoors", function (coord, zoom) {
-            return "https://a.tile.thunderforest.com/outdoors/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
-        });
-        registerMapType(map, outdoorsMap, s11.util.MapTypeId.OUTDOORS);
+//
+//        var pioneerMap = createMapTypeOptions("Pioneer", function (coord, zoom) {
+//            return "https://a.tile.thunderforest.com/pioneer/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
+//        });
+//        registerMapType(map, pioneerMap, s11.util.MapTypeId.PIONEER);
+//
+//
+//        var mapboxMap = createMapTypeOptions("Mapbox", function (coord, zoom) {
+//            return "https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=pk.eyJ1IjoiZHNjaHVsZCIsImEiOiJjaXA4Mm5xazkwMDJwdXRubXBxa25peTV4In0.uCnPaGteG5-H80uO13RiOw";
+//        });
+//        registerMapType(map, mapboxMap, s11.util.MapTypeId.MAPBOX);
+//
+//
+//        var mapboxMap = createMapTypeOptions("Mapbox-Sat", function (coord, zoom) {
+//            return "https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=pk.eyJ1IjoiZHNjaHVsZCIsImEiOiJjaXA4Mm5xazkwMDJwdXRubXBxa25peTV4In0.uCnPaGteG5-H80uO13RiOw";
+//        });
+//        registerMapType(map, mapboxMap, s11.util.MapTypeId.MAPBOX_SATELLITE);
+//
+//
+//        var mapboxMap = createMapTypeOptions("Mapbox-Streets", function (coord, zoom) {
+//            return "https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=" + mapboxKey;
+//        });
+//        registerMapType(map, mapboxMap, s11.util.MapTypeId.MAPBOX_STREETS);
+//
+//        var mapboxMap = createMapTypeOptions("Mapbox-Outdoors", function (coord, zoom) {
+//            return "https://api.mapbox.com/styles/v1/mapbox/outdoors-v9/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=" + mapboxKey;
+//        });
+//        registerMapType(map, mapboxMap, s11.util.MapTypeId.MAPBOX_OUTDOORS);
+//
+//        var mapboxMap = createMapTypeOptions("Mapbox-Cust", function (coord, zoom) {
+//            return "https://api.mapbox.com/styles/v1/dschuld/cip80f3cr0023cunsqdt0leuz/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=" + mapboxKey;
+//        });
+//        registerMapType(map, mapboxMap, s11.util.MapTypeId.MAPBOX_CUST);
+//
+//
+//
+//
+//        var openTopoMap = createMapTypeOptions("OpenTopoMap", function (coord, zoom) {
+//            return "https://a.tile.opentopomap.org/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
+//        });
+//        registerMapType(map, openTopoMap, s11.util.MapTypeId.OTM);
+//
+//
+//        var outdoorsMap = createMapTypeOptions("Outdoors", function (coord, zoom) {
+//            return "https://a.tile.thunderforest.com/outdoors/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
+//        });
+//        registerMapType(map, outdoorsMap, s11.util.MapTypeId.OUTDOORS);
 
         map.setMapTypeId(google.maps.MapTypeId.TERRAIN);
 
@@ -5007,25 +5001,33 @@ function centerMap(lat, lng) {
 
 function readOptions() {
 
+    
+    var optionsUrl = wpdata.tripOptionsUrl? wpdata.tripOptionsUrl : './tripOptions.json';
+    
+    var styleUrl = wpdata.mapStyleUrl? wpdata.mapStyleUrl : '../config/mapStyle.json';
 
-    if (wpdata.tripOptionsUrl) {
-        var url = wpdata.tripOptionsUrl;
+    $.getJSON(optionsUrl, function (optionsJson) {
+        tripOptions = optionsJson;
 
-    } else {
-        var url = './tripOptions.json';
-    }
+        $.getJSON(styleUrl, function (styleJson) {
+            initialize(styleJson);
+        });
 
-    $.getJSON(url, function (json) {
-        tripOptions = json;
-        initialize();
+
+
     });
 }
 
-function initialize() {
+function initialize(mapStyle) {
 
     focusser = s11.geomodel.getFocusser();
 
-    map = factory.createMap(tripOptions.initCenter[1], tripOptions.initCenter[0], tripOptions.initZoom, 'googleMap', tripOptions.mapboxKey);
+
+
+    map = factory.createMap(tripOptions.initCenter[1], tripOptions.initCenter[0], tripOptions.initZoom, 'googleMap', tripOptions.mapboxKey, mapStyle);
+
+
+    map.setMapTypeId(Math.random() > tripOptions.tileServerRatio ? google.maps.MapTypeId.TERRAIN : s11.util.MapTypeId.MAPBOX_CUST_OUT);
 
     factory.addEventListener(map, 'click', function (e) {
         toGeoJsonTextFromLatLng(e.latLng);
@@ -5047,7 +5049,7 @@ function initialize() {
 
 
     var controls = new s11.controls.ControlsContainer(map);
-    
+
     if (!wpdata.restApiPath) {
         wpdata.restApiPath = '/wp-json/wp/v2/posts/';
     }
@@ -5214,7 +5216,7 @@ var addCurrentLocation = function (appData) {
 var callback = function (locationData, appData, locationIconPath) {
 
     var location = appData.factory.createLatLng(locationData.coordinates[0], locationData.coordinates[1]);
-    var locationText = locationData.timestamp;
+    var locationText = locationData.timestamp.split(' ')[0];
     var myLocation = s11.geomodel.Place.createFromData(locationText, locationIconPath, location);
     var map = appData.map;
     appData.trip.addPlaces(myLocation);
@@ -5309,13 +5311,14 @@ var createXXXContent = function (picture, flickrLink) {
     return contentString;
 };
 
+
 var addPhotoFeed = function (appData) {
 
     var mc = new MarkerClusterer(map, [], {
         gridSize: 20,
         styles: [{
-                url: 'https://drive.google.com/uc?export=download&id=0B48vYXs63P2lSUU2X2hudTUtV0E',
-                width: 32,
+                url: 'https://drive.google.com/uc?export=download&id=0B48vYXs63P2lYlRrcWJldllkQmc',
+                width: 25,
                 height: 25,
                 textSize: 10
             }]
@@ -5333,7 +5336,7 @@ var addPhotoFeed = function (appData) {
             };
         }).forEach(function (photo) {
             var location = appData.factory.createLatLng(photo.lat, photo.lng);
-            var photoMarker = s11.geomodel.Place.createFromData("", "https://drive.google.com/uc?export=download&id=0B48vYXs63P2lSUU2X2hudTUtV0E", location);
+            var photoMarker = s11.geomodel.Place.createFromData("", "https://drive.google.com/uc?export=download&id=0B48vYXs63P2lYlRrcWJldllkQmc", location);
             photoMarker.setMap(appData.map);
 
             mc.addMarker(photoMarker.getMarker());

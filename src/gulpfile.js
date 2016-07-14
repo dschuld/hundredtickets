@@ -67,7 +67,7 @@ gulp.task('scripts', ['scripts-non-ugly'], function () {
 });
 
 gulp.task('conf', function () {
-    return gulp.src(['../config/tripOptions.json'])
+    return gulp.src(['../config/*.json'])
             .pipe(changed('./../dist/'))
             .pipe(gulp.dest('./../dist/'));
 });
@@ -91,7 +91,7 @@ gulp.task('htmlmin', function () {
  * Deploys the uglified sources to the wordpress theme
  */
 gulp.task('deploy-wordpress-prod', ['default'], function () {
-    gulp.src(['./../dist/all.js', './../dist/tripOptions.json'])
+    gulp.src(['./../dist/all.js', './../dist/*.json'])
             .pipe(gulp.dest(LOCAL_WORDPRESS_THEME_DIR + '/js'));
 
     return gulp.src(['./../dist/maps-style.css'])
@@ -111,7 +111,7 @@ gulp.task('deploy-wordpress-test', ['scripts-non-ugly', 'conf'], function () {
     gulp.src(['./maps-style.css'])
             .pipe(gulp.dest(LOCAL_WORDPRESS_THEME_DIR));
 
-    return  gulp.src(['./../dist/tripOptions.json'])
+    return  gulp.src(['./../dist/*.json'])
             .pipe(gulp.dest(LOCAL_WORDPRESS_THEME_DIR + '/js'));
 });
 

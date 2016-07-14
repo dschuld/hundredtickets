@@ -34,25 +34,33 @@ function centerMap(lat, lng) {
 
 function readOptions() {
 
+    
+    var optionsUrl = wpdata.tripOptionsUrl? wpdata.tripOptionsUrl : './tripOptions.json';
+    
+    var styleUrl = wpdata.mapStyleUrl? wpdata.mapStyleUrl : '../config/mapStyle.json';
 
-    if (wpdata.tripOptionsUrl) {
-        var url = wpdata.tripOptionsUrl;
+    $.getJSON(optionsUrl, function (optionsJson) {
+        tripOptions = optionsJson;
 
-    } else {
-        var url = './tripOptions.json';
-    }
+        $.getJSON(styleUrl, function (styleJson) {
+            initialize(styleJson);
+        });
 
-    $.getJSON(url, function (json) {
-        tripOptions = json;
-        initialize();
+
+
     });
 }
 
-function initialize() {
+function initialize(mapStyle) {
 
     focusser = s11.geomodel.getFocusser();
 
-    map = factory.createMap(tripOptions.initCenter[1], tripOptions.initCenter[0], tripOptions.initZoom, 'googleMap', tripOptions.mapboxKey);
+
+
+    map = factory.createMap(tripOptions.initCenter[1], tripOptions.initCenter[0], tripOptions.initZoom, 'googleMap', tripOptions.mapboxKey, mapStyle);
+
+
+    map.setMapTypeId(Math.random() > tripOptions.tileServerRatio ? google.maps.MapTypeId.TERRAIN : s11.util.MapTypeId.MAPBOX_CUST_OUT);
 
     factory.addEventListener(map, 'click', function (e) {
         toGeoJsonTextFromLatLng(e.latLng);
@@ -74,7 +82,7 @@ function initialize() {
 
 
     var controls = new s11.controls.ControlsContainer(map);
-    
+
     if (!wpdata.restApiPath) {
         wpdata.restApiPath = '/wp-json/wp/v2/posts/';
     }

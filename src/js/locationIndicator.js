@@ -41,7 +41,7 @@ var addCurrentLocation = function (appData) {
 var callback = function (locationData, appData, locationIconPath) {
 
     var location = appData.factory.createLatLng(locationData.coordinates[0], locationData.coordinates[1]);
-    var locationText = locationData.timestamp;
+    var locationText = locationData.timestamp.split(' ')[0];
     var myLocation = s11.geomodel.Place.createFromData(locationText, locationIconPath, location);
     var map = appData.map;
     appData.trip.addPlaces(myLocation);

@@ -52,13 +52,14 @@ var createXXXContent = function (picture, flickrLink) {
     return contentString;
 };
 
+
 var addPhotoFeed = function (appData) {
 
     var mc = new MarkerClusterer(map, [], {
         gridSize: 20,
         styles: [{
-                url: 'https://drive.google.com/uc?export=download&id=0B48vYXs63P2lSUU2X2hudTUtV0E',
-                width: 32,
+                url: 'https://drive.google.com/uc?export=download&id=0B48vYXs63P2lYlRrcWJldllkQmc',
+                width: 25,
                 height: 25,
                 textSize: 10
             }]
@@ -76,7 +77,7 @@ var addPhotoFeed = function (appData) {
             };
         }).forEach(function (photo) {
             var location = appData.factory.createLatLng(photo.lat, photo.lng);
-            var photoMarker = s11.geomodel.Place.createFromData("", "https://drive.google.com/uc?export=download&id=0B48vYXs63P2lSUU2X2hudTUtV0E", location);
+            var photoMarker = s11.geomodel.Place.createFromData("", "https://drive.google.com/uc?export=download&id=0B48vYXs63P2lYlRrcWJldllkQmc", location);
             photoMarker.setMap(appData.map);
 
             mc.addMarker(photoMarker.getMarker());
