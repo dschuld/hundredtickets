@@ -694,7 +694,7 @@ s11.geomodel.Route.prototype.addLegFromLatLong = function (path, legName, type) 
     var leg = factory.createPolyline({
         path: path,
         strokeColor: this.getColor(),
-        strokeOpacity: 0.5,
+        strokeOpacity: 1,
         strokeWeight: 3,
         length: factory.computeLength(path) / 1000,
         zIndex: type
@@ -716,7 +716,7 @@ s11.geomodel.Route.prototype.addLegFromGeoJSON = function (jsonLineStrings, legN
 
     jsonLineStrings.forEach(function (feature) {
         feature.strokeColor = this.getColor();
-        feature.strokeOpacity = 0.5;
+        feature.strokeOpacity = 1;
         feature.strokeWeight = 3;
 
         this.addLeg(feature, legName, legText, legLink);
@@ -932,7 +932,7 @@ var highlightPath = function () {
 var unhighlightPath = function () {
     this.setOptions({
         strokeWeight: 3,
-        strokeOpacity: 0.5
+        strokeOpacity: 1
     });
 };
 

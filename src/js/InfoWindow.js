@@ -146,10 +146,10 @@ s11.ui.NullContentProvider = function () {
         }
     };
 
-}();
+}();                                                                                                                            
 
 /**
- * A ContentProvider that shows some text in the info window.
+ * A ContentProvider that shows some text in the info window.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
  */
 s11.ui.TextContentProvider = function () {
 

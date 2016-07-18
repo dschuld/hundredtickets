@@ -77,7 +77,7 @@ var factory = {
     encodePath: function (path) {
         return google.maps.geometry.encoding.encodePath(path);
     },
-    createMap: function (lat, lng, zoom, mapDivId, mapboxKey, styles) {
+    createMap: function (lat, lng, zoom, mapDivId, mapboxKey, mapboxStyle, styles) {
         if (!zoom) {
             zoom = 3;
         }        
@@ -118,6 +118,7 @@ var factory = {
             zoomControlOptions: {
                 position: google.maps.ControlPosition.LEFT_CENTER
             },
+            mapTypeControl: false,
             scaleControl: true,
             streetViewControlOptions: {
                 position: google.maps.ControlPosition.LEFT_TOP
@@ -132,7 +133,7 @@ var factory = {
 
 
         var mapboxMap = createMapTypeOptions("Mapbox-Cust-Out", function (coord, zoom) {
-            return "https://api.mapbox.com/styles/v1/dschuld/cip57q2p9000hdiluvwbmnoqp/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=" + mapboxKey;
+            return "https://api.mapbox.com/styles/v1/dschuld/" + mapboxStyle + "/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=" + mapboxKey;
         });
         registerMapType(map, mapboxMap, s11.util.MapTypeId.MAPBOX_CUST_OUT);
 

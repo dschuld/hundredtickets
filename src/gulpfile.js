@@ -70,7 +70,6 @@ gulp.task('scripts', ['scripts-non-ugly'], function () {
 
 gulp.task('conf', function () {
     return gulp.src(['../config/*.json'])
-            .pipe(changed('./../dist/'))
             .pipe(gulp.dest('./../dist/'));
 });
 
