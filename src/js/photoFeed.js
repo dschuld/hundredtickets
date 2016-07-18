@@ -64,8 +64,8 @@ var addPhotoFeed = function (appData) {
                 textSize: 10
             }]
     });
-    var jsonUrl = 'https://api.flickr.com/services/feeds/geo/?id=' + appData.tripOptions.flickrId + '&lang=en-us&format=json&georss=true&tags=' + appData.tripOptions.flickrTag;
-
+    var jsonUrl = 'https://api.flickr.com/services/feeds/geo/?id=' + appData.tripOptions.flickrId + '&lang=en-us&format=json&georss=true&tagmode=any&tags=' + appData.tripOptions.flickrTags;
+    console.log(jsonUrl);
     jsonFlickrFeed = function (feedObject) {
         feedObject.items.map(function (entry) {
             return {

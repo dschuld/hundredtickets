@@ -20,7 +20,9 @@ var SERVER_DOMAIN = 'u85399740.1and1-data.host';
 var SERVER_WP_USER = 'u85399740';
 //var PK_FILE = 'XXXX';
 var SERVER_WP_THEMES_DIR = '/clickandbuilds/AHundredTicketstoBangkok/wp-content/themes';
-var LOCAL_WORDPRESS_THEME_DIR = '/home/david/dev/theme/twentythirteen-hundredtickets/';
+var LOCAL_WORDPRESS_THEME_DIR = '/home/david/dev/theme/twentythirteen-hundredtickets-dev/';
+var LOCAL_WORDPRESS_PROD_THEME_DIR = '/home/david/dev/theme/twentythirteen-hundredtickets/';
+
 
 var gulp = require('gulp');
 var changed = require('gulp-changed'),
@@ -87,15 +89,21 @@ gulp.task('htmlmin', function () {
             .pipe(gulp.dest('./../dist/'));
 });
 
+
+gulp.task('deploy-themes', ['deploy-wordpress-prod','deploy-wordpress-dev'], function () {
+    //aggregator task
+
+});
+
 /*
  * Deploys the uglified sources to the wordpress theme
  */
 gulp.task('deploy-wordpress-prod', ['default'], function () {
     gulp.src(['./../dist/all.js', './../dist/*.json'])
-            .pipe(gulp.dest(LOCAL_WORDPRESS_THEME_DIR + '/js'));
+            .pipe(gulp.dest(LOCAL_WORDPRESS_PROD_THEME_DIR + '/js'));
 
     return gulp.src(['./../dist/maps-style.css'])
-            .pipe(gulp.dest(LOCAL_WORDPRESS_THEME_DIR));
+            .pipe(gulp.dest(LOCAL_WORDPRESS_PROD_THEME_DIR));
 
 });
 
@@ -103,9 +111,8 @@ gulp.task('deploy-wordpress-prod', ['default'], function () {
 /*
  * Deploys the non-uglified sources to the wordpress theme 
  */
-gulp.task('deploy-wordpress-test', ['scripts-non-ugly', 'conf'], function () {
+gulp.task('deploy-wordpress-dev', ['scripts-non-ugly', 'conf'], function () {
     gulp.src(['./../dist/all.js'])
-            .pipe(changed(LOCAL_WORDPRESS_THEME_DIR + '/js'))
             .pipe(gulp.dest(LOCAL_WORDPRESS_THEME_DIR + '/js'));
 
     gulp.src(['./maps-style.css'])
