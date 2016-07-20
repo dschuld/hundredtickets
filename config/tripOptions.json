@@ -11,6 +11,8 @@
     "flickrId": "134819556@N06",
     "flickrTags": "map",
     "debugWindow": false,
+    "tileServerRatio": 1.0,
+    "mapboxStyle": "cip57q2p9000hdiluvwbmnoqp",
     "mapboxKey": "pk.eyJ1IjoiZHNjaHVsZCIsImEiOiJjaXA4Mm5xazkwMDJwdXRubXBxa25peTV4In0.uCnPaGteG5-H80uO13RiOw"
 
 } 
