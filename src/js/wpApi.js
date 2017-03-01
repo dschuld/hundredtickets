@@ -31,10 +31,16 @@ s11.wpapi.WordpressConnector = function (baseUrl, restApiPath) {
      */
     var restUrl = baseUrl + restApiPath;
     
+    /**
+     * @type {String}
+     */    
     var baseUrl = baseUrl;
     
 
-
+    /**
+     * Returns functions for retrieving the URL and the post preview.
+     * TODO implement error handling
+     */ 
     return {
         getRestUrl: function () {
             return restUrl;
@@ -42,13 +48,13 @@ s11.wpapi.WordpressConnector = function (baseUrl, restApiPath) {
         getBaseUrl: function() {
             return baseUrl;
         },
+        /**
+         * Retrieves the post preview from the WP REST API according to given slug and passes it to the callback.
+         */        
         getPost: function (slug, callback) {
             $.ajax({
                 url: restUrl + '?slug=' + slug,
                 type: 'get',
-                beforeSend: function () {
-                    //
-                },
                 success: function (result) {
                    callback(result[0].excerpt.rendered);
                 }
