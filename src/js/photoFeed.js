@@ -29,7 +29,7 @@ var photoFeedWindow = function () {
         show: function (pos, picture, flickrLink, map) {
             var point = s11.util.fromLatLngToPoint(pos, map);
             var tt = $('#photoFeed-window');
-            tt = tt.html(createXXXContent(picture, flickrLink)).css({
+            tt = tt.html(createThumbnailHtml(picture, flickrLink)).css({
                 'left': point.x,
                 'top': point.y
             });
@@ -43,7 +43,7 @@ var photoFeedWindow = function () {
 
 }();
 
-var createXXXContent = function (picture, flickrLink) {
+var createThumbnailHtml = function (picture, flickrLink) {
     var imageString = '<a href="' + flickrLink + '"  target="_blank"><img src="' + picture + '" height="auto" width="auto" /></a>';
 
     var contentString =
@@ -53,18 +53,9 @@ var createXXXContent = function (picture, flickrLink) {
 };
 
 
-var addPhotoFeed = function (appData) {
+var addPhotoFeed = function (appData, mc, jsonUrl) {
 
-    var mc = new MarkerClusterer(map, [], {
-        gridSize: 20,
-        styles: [{
-                url: 'https://drive.google.com/uc?export=download&id=0B48vYXs63P2lYlRrcWJldllkQmc',
-                width: 25,
-                height: 25,
-                textSize: 10
-            }]
-    });
-    var jsonUrl = 'https://api.flickr.com/services/feeds/geo/?id=' + appData.tripOptions.flickrId + '&lang=en-us&format=json&georss=true&tagmode=any&tags=' + appData.tripOptions.flickrTags;
+   
     console.log(jsonUrl);
     jsonFlickrFeed = function (feedObject) {
         feedObject.items.map(function (entry) {
@@ -119,7 +110,23 @@ var createPhotoWindowContent = function (picture, flickrLink) {
     return contentString;
 };
 
-s11.pluginLoader.addPlugin(photoFeed_PLUGIN_ID, function (data) {
-    addPhotoFeed(data);
+s11.pluginLoader.addPlugin(photoFeed_PLUGIN_ID,function(data)
+{
+var mc = new MarkerClusterer(map, [], {
+        gridSize: 20,
+        styles: [{
+                url: 'https://drive.google.com/uc?export=download&id=0B48vYXs63P2lYlRrcWJldllkQmc',
+                width: 25,
+                height: 25,
+                textSize: 10
+            }]
+    });
+data.tripOptions.flickrTags.split(',').forEach(function(tag) {
+    var jsonUrl = "https://api.flickr.com/services/feeds/geo/?id=" + data.tripOptions.flickrId + "&lang=en-us&format=json&georss=true&tagmode=any&tags=" + tag;
+    addPhotoFeed(data, mc, jsonUrl);
+
+
+     });
+
 });
 

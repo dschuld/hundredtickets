@@ -29,7 +29,7 @@ s11.wpapi.WordpressConnector = function (baseUrl, restApiPath) {
     /**
      * @type {String}
      */
-    var restUrl = baseUrl + restApiPath;
+    var restUrl = baseUrl + '/' + restApiPath;
     
     /**
      * @type {String}

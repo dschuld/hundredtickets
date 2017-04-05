@@ -34,10 +34,10 @@ function centerMap(lat, lng) {
 
 function readOptions() {
 
-    
-    var optionsUrl = wpdata.tripOptionsUrl? wpdata.tripOptionsUrl : './tripOptions.json';
-    
-    var styleUrl = wpdata.mapStyleUrl? wpdata.mapStyleUrl : '../config/mapStyle.json';
+
+    var optionsUrl = wpdata.tripOptionsUrl ? wpdata.tripOptionsUrl : './tripOptions.json';
+
+    var styleUrl = wpdata.mapStyleUrl ? wpdata.mapStyleUrl : '../config/mapStyle.json';
 
     $.getJSON(optionsUrl, function (optionsJson) {
         tripOptions = optionsJson;
@@ -91,6 +91,14 @@ function initialize(mapStyle) {
     }
 
     var wpApi = new s11.wpapi.WordpressConnector(wpdata.wpBaseUrl, wpdata.restApiPath);
+    AWS.config.apiVersions = {
+        dynamodb: '2012-08-10'
+    };
+    AWS.config.region = 'eu-central-1';
+    AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: 'eu-central-1:8549458d-24ed-44ea-b5af-66196c3f8e68'
+    });
+    
     var globalData = {
         "map": map,
         "trip": trip,

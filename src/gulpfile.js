@@ -16,12 +16,6 @@
 
 var CONF_TEST = './tripOptions.json';
 var CONF_PROD = '../config/tripOptions.json';
-var SERVER_DOMAIN = 'u85399740.1and1-data.host';
-var SERVER_WP_USER = 'u85399740';
-//var PK_FILE = 'XXXX';
-var SERVER_WP_THEMES_DIR = '/clickandbuilds/AHundredTicketstoBangkok/wp-content/themes';
-var LOCAL_WORDPRESS_THEME_DIR = '/home/david/dev/theme/twentythirteen-hundredtickets-dev/';
-var LOCAL_WORDPRESS_PROD_THEME_DIR = '/home/david/dev/theme/twentythirteen-hundredtickets/';
 
 
 var gulp = require('gulp');
@@ -32,24 +26,11 @@ var changed = require('gulp-changed'),
         imagemin = require('gulp-imagemin'),
         clean = require('gulp-clean'),
         htmlmin = require('gulp-htmlmin'),
-        cssnano = require('gulp-cssnano'),
-        scp = require('gulp-scp2'),
-        fs = require('fs'),
-        GulpSSH = require('gulp-ssh');
+        cssnano = require('gulp-cssnano');
 
-var config = {
-    host: SERVER_DOMAIN,
-    port: 22,
-    username: SERVER_WP_USER,
-//    privateKey: fs.readFileSync(PK_FILE)
-    password: 'XXXXX'
-};
+var devDir = process.env.LOCAL_DEV_THEME_DIR;
+var prodDir = process.env.LOCAL_PROD_THEME_DIR;
 
-
-var ssh = new GulpSSH({
-    ignoreErrors: false,
-    sshConfig: config
-});
 
 gulp.task('default', ['scripts', 'conf', 'cssnano', 'htmlmin'], function () {
     //default aggregator
@@ -88,8 +69,14 @@ gulp.task('htmlmin', function () {
             .pipe(gulp.dest('./../dist/'));
 });
 
+gulp.task('jshint', function () {
+    return gulp.src(["./js/util.js", './js/featurefactory.js', './js/FuTa.js', './js/data.js', './js/geomodel.js', "./js/s11_controls.js", './js/s11.js', "./js/locationIndicator.js", "./js/photoFeed.js", "./js/places.js", "./js/routes_regions.js"])
+            .pipe(jshint())
+            .pipe(jshint.reporter('default'));
+});
 
-gulp.task('deploy-themes', ['deploy-wordpress-prod','deploy-wordpress-dev'], function () {
+
+gulp.task('deploy-themes', ['deploy-theme-prod','deploy-theme-dev'], function () {
     //aggregator task
 
 });
@@ -97,12 +84,12 @@ gulp.task('deploy-themes', ['deploy-wordpress-prod','deploy-wordpress-dev'], fun
 /*
  * Deploys the uglified sources to the wordpress theme
  */
-gulp.task('deploy-wordpress-prod', ['default'], function () {
+gulp.task('deploy-theme-prod', ['default'], function () {
     gulp.src(['./../dist/all.js', './../dist/*.json'])
-            .pipe(gulp.dest(LOCAL_WORDPRESS_PROD_THEME_DIR + '/js'));
+            .pipe(gulp.dest(prodDir + '/js'));
 
     return gulp.src(['./../dist/maps-style.css'])
-            .pipe(gulp.dest(LOCAL_WORDPRESS_PROD_THEME_DIR));
+            .pipe(gulp.dest(prodDir));
 
 });
 
@@ -110,15 +97,15 @@ gulp.task('deploy-wordpress-prod', ['default'], function () {
 /*
  * Deploys the non-uglified sources to the wordpress theme 
  */
-gulp.task('deploy-wordpress-dev', ['scripts-non-ugly', 'conf'], function () {
+gulp.task('deploy-theme-dev', ['scripts-non-ugly', 'conf'], function () {
     gulp.src(['./../dist/all.js'])
-            .pipe(gulp.dest(LOCAL_WORDPRESS_THEME_DIR + '/js'));
+            .pipe(gulp.dest(devDir + '/js'));
 
     gulp.src(['./maps-style.css'])
-            .pipe(gulp.dest(LOCAL_WORDPRESS_THEME_DIR));
+            .pipe(gulp.dest(devDir));
 
     return  gulp.src(['./../dist/*.json'])
-            .pipe(gulp.dest(LOCAL_WORDPRESS_THEME_DIR + '/js'));
+            .pipe(gulp.dest(devDir + '/js'));
 });
 
 gulp.task('deploy-local-appengine', function () {
@@ -128,52 +115,7 @@ gulp.task('deploy-local-appengine', function () {
 });
 
 
-gulp.task('scp-test', function () {
-    gulp.src([LOCAL_WORDPRESS_THEME_DIR + '/**'])
-            .pipe(scp({
-                host: SERVER_DOMAIN,
-                username: SERVER_WP_USER,
-                privateKey: fs.readFileSync(PK_FILE),
-                dest: SERVER_HOME_DIR
-            }))
-            .on('error', function (err) {
-                console.log(err);
-            });
-});
 
 
-
-gulp.task('deploy-production', function () {
-
-    ssh.exec(['rm -rf ' + SERVER_WP_THEMES_DIR + '/twentythirteen-hundredtickets'], {filePath: 'D:/Benutzer-Profile/schuldd/commands.log'});
-
-    return gulp.src([LOCAL_WORDPRESS_THEME_DIR + '/**'])
-            .pipe(ssh.dest(SERVER_WP_THEMES_DIR + '/twentythirteen-hundredtickets'));
-});
-
-
-gulp.task('sftp-write', function () {
-  return gulp.src(['./gulpfile.js'])
-    .pipe(ssh.sftp('write', SERVER_HOME_DIR));
-});
-
-gulp.task('ssh-test', function () {
-
-//    ssh.exec(['rm -rf ' + SERVER_HOME_DIR + '/twentythirteen-s11-integrated'], {filePath: 'D:/Benutzer-Profile/schuldd/commands.log'});
-
-//    ssh.exec(['mkdir test'], {filePath: 'D:/Benutzer-Profile/schuldd/commands.log'});
-    ssh.exec(['ls -la'], {filePath: 'logs/commands.log'});
-    ssh.exec(['touch test.txt'], {filePath: 'logs/commands.log'});
-
-    return gulp.src(['C:/windows-version.txt'])
-            .pipe(ssh.dest(SERVER_HOME_DIR));
-});
-
-
-gulp.task('jshint', function () {
-    return gulp.src(["./js/util.js", './js/featurefactory.js', './js/FuTa.js', './js/data.js', './js/geomodel.js', "./js/s11_controls.js", './js/s11.js', "./js/locationIndicator.js", "./js/photoFeed.js", "./js/places.js", "./js/routes_regions.js"])
-            .pipe(jshint())
-            .pipe(jshint.reporter('default'));
-});
 
 

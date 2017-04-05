@@ -175,7 +175,7 @@ s11.ui.YoutubeContentProvider = function () {
         create: function (name, link) {
             return {
                 getContent: function (callback) {
-                    var contentString = '<iframe id="ytplayer" type="text/html" height="300" width="480"  src="http://www.youtube.com/embed/' + link + '" frameborder="0"/>';
+                    var contentString = '<iframe id="ytplayer" type="text/html" height="300" width="480"  src="https://www.youtube.com/embed/' + link + '" frameborder="0"/>';
                     contentString = createInfoWindowContentString(name, contentString);
                     callback(contentString);
                 }
