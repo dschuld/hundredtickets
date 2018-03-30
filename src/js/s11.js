@@ -60,7 +60,7 @@ function initialize(mapStyle) {
     map = factory.createMap(tripOptions.initCenter[1], tripOptions.initCenter[0], tripOptions.initZoom, 'googleMap', tripOptions.mapboxKey, tripOptions.mapboxStyle, mapStyle);
 
 
-    map.setMapTypeId(Math.random() > tripOptions.tileServerRatio ? google.maps.MapTypeId.TERRAIN : s11.util.MapTypeId.MAPBOX_CUST_OUT);
+    map.setMapTypeId(Math.random() > tripOptions.tileServerRatio ? google.maps.MapTypeId.SATELLITE : s11.util.MapTypeId.MAPBOX_CUST_OUT);
 
     factory.addEventListener(map, 'click', function (e) {
         toGeoJsonTextFromLatLng(e.latLng);
@@ -81,7 +81,7 @@ function initialize(mapStyle) {
     });
 
 
-    var controls = new s11.controls.ControlsContainer(map);
+    //var controls = new s11.controls.ControlsContainer(map);
 
     if (!wpdata.restApiPath) {
         wpdata.restApiPath = '/wp-json/wp/v2/posts/';
@@ -90,7 +90,6 @@ function initialize(mapStyle) {
         wpdata.wpBaseUrl = 'http://192.168.1.58/wordpress/';
     }
 
-    var wpApi = new s11.wpapi.WordpressConnector(wpdata.wpBaseUrl, wpdata.restApiPath);
     AWS.config.apiVersions = {
         dynamodb: '2012-08-10'
     };
@@ -106,10 +105,8 @@ function initialize(mapStyle) {
         "tripOptions": tripOptions,
         "log": function (message) {
             log(message);
-        },
-        "controls": controls,
-        "wpApi": wpApi
-    };
+        }
+	};
 
 
     s11.pluginLoader.init(globalData);

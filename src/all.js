@@ -17,11 +17,11 @@
 
 
 var async = async || {};
-var baseScripts1 = ["./js/libs/markerclusterer/markerclusterer_compiled.js", "./js/libs/geojson/GeoJSON.js", "./js/pluginLoader.js","./js/wpApi.js", "./js/FuTa.js", "./js/featurefactory.js"];
+var baseScripts1 = ["./js/libs/markerclusterer/markerclusterer_compiled.js", "./js/libs/geojson/GeoJSON.js", "./js/pluginLoader.js", "./js/featurefactory.js"];
 var baseScripts2 = ["./js/util.js", "./js/InfoWindow.js"];
-var baseScripts3 = ["./js/geomodel.js", "./js/s11_controls.js", "./js/data.js"];
+var baseScripts3 = ["./js/geomodel.js", "./js/data.js"];
 var mainScript = ["./js/s11.js"];
-var pluginScripts = ["./js/locationIndicator.js", "./js/photoFeed.js", "./js/places.js", "./js/routes_regions.js", "./js/help-control.js"];
+var pluginScripts = ["./js/photoFeed.js"];
 
 var loadScript = function (script, onLoadFunction) {
     var scriptElement = document.createElement("script");

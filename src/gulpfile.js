@@ -37,7 +37,7 @@ gulp.task('default', ['scripts', 'conf', 'cssnano', 'htmlmin'], function () {
 });
 
 gulp.task('scripts-non-ugly', function () {
-    return gulp.src(["./js/libs/async/async.js", "./js/libs/markerclusterer/markerclusterer_compiled.js", "./js/libs/geojson/GeoJSON.js", "./js/pluginLoader.js", "./js/wpApi.js", "./js/FuTa.js", "./js/featurefactory.js", "./js/util.js", "./js/InfoWindow.js", "./js/geomodel.js", "./js/s11_controls.js", "./js/data.js", "./js/s11.js", "./js/locationIndicator.js", "./js/photoFeed.js", "./js/places.js", "./js/routes_regions.js", "./js/help-control.js"])
+    return gulp.src(["./js/libs/async/async.js", "./js/libs/markerclusterer/markerclusterer_compiled.js", "./js/libs/geojson/GeoJSON.js", "./js/pluginLoader.js", "./js/featurefactory.js", "./js/util.js", "./js/InfoWindow.js", "./js/geomodel.js", "./js/data.js", "./js/s11.js", "./js/photoFeed.js"])
             .pipe(changed('./../dist/'))
             .pipe(concat('all.js'))
             .pipe(gulp.dest('./../dist/'));

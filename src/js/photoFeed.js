@@ -68,7 +68,9 @@ var addPhotoFeed = function (appData, mc, jsonUrl) {
             };
         }).forEach(function (photo) {
             var location = appData.factory.createLatLng(photo.lat, photo.lng);
-            var photoMarker = s11.geomodel.Place.createFromData("", "https://drive.google.com/uc?export=download&id=0B48vYXs63P2lYlRrcWJldllkQmc", location);
+			
+			//Pass icon drive link as second param for non-default
+            var photoMarker = s11.geomodel.Place.createFromData("", "", location);
             photoMarker.setMap(appData.map);
 
             mc.addMarker(photoMarker.getMarker());
