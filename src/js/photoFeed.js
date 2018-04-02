@@ -28,12 +28,24 @@ var photoFeedWindow = function () {
     return {
         show: function (pos, picture, flickrLink, map) {
             var point = s11.util.fromLatLngToPoint(pos, map);
+			var w = map.getDiv().offsetWidth;
+			var h = map.getDiv().offsetHeight;
+			var alignment = {
+                'left': point.x
+            }
+			
+			//TODO alignment not hardcoded - retrieve outerHeight when thumbnail is loaded and reposition div
+			//pics have to be loaded first
+			//if (point.y > h/2) {
+              //  alignment['top'] = point.y - 270;
+			//}  else {
+                alignment['top'] = point.y;
+			//}
             var tt = $('#photoFeed-window');
-            tt = tt.html(createThumbnailHtml(picture, flickrLink)).css({
-                'left': point.x,
-                'top': point.y
-            });
+            tt = tt.html(createThumbnailHtml(picture, flickrLink)).css(alignment);
             tt.show();
+			var height = $('#photoFeed-window').height();
+			return;
 
         },
         hide: function () {
@@ -52,6 +64,17 @@ var createThumbnailHtml = function (picture, flickrLink) {
     return contentString;
 };
 
+var extractLegendTagFromPhotoTags = function(tagString, legend) {
+	var tags = tagString.split(" ");
+	var tag = "";
+	tags.forEach(function(curTag) {
+		if(curTag in legend) {
+			tag = curTag;
+		}
+	});
+	return tag;
+}
+
 
 var addPhotoFeed = function (appData, mc, jsonUrl) {
 
@@ -64,13 +87,25 @@ var addPhotoFeed = function (appData, mc, jsonUrl) {
                 flickrLink: entry.link,
                 date: entry.date_taken,
                 lat: entry.latitude,
-                lng: entry.longitude
+                lng: entry.longitude,
+				tag: extractLegendTagFromPhotoTags(entry.tags, appData.tripOptions.legend)
             };
         }).forEach(function (photo) {
             var location = appData.factory.createLatLng(photo.lat, photo.lng);
+			var legend = appData.tripOptions.legend;
+			var color = legend[photo.tag];
+			
+			var icon = {
+				path: google.maps.SymbolPath.CIRCLE,
+				fillColor: color,
+				fillOpacity: .8,
+				scale: 6,
+				strokeColor: 'white',
+				strokeWeight: 0
+			}
 			
 			//Pass icon drive link as second param for non-default
-            var photoMarker = s11.geomodel.Place.createFromData("", "", location);
+            var photoMarker = s11.geomodel.Place.createFromData("", icon, location);
             photoMarker.setMap(appData.map);
 
             mc.addMarker(photoMarker.getMarker());
@@ -95,8 +130,11 @@ var addPhotoFeed = function (appData, mc, jsonUrl) {
         dataType: "jsonp"
 
     });
+	
 
     s11.pluginLoader.onLoad(photoFeed_PLUGIN_ID, true);
+	
+	
 };
 
 var createPhotoWindowContent = function (picture, flickrLink) {
@@ -114,15 +152,9 @@ var createPhotoWindowContent = function (picture, flickrLink) {
 
 s11.pluginLoader.addPlugin(photoFeed_PLUGIN_ID,function(data)
 {
-var mc = new MarkerClusterer(map, [], {
-        gridSize: 20,
-        styles: [{
-                url: 'https://drive.google.com/uc?export=download&id=0B48vYXs63P2lYlRrcWJldllkQmc',
-                width: 25,
-                height: 25,
-                textSize: 10
-            }]
-    });
+	
+ 
+var mc = new MarkerClusterer(map, [], {gridSize: 20, imagePath: 'js/m'});
 data.tripOptions.flickrTags.split(',').forEach(function(tag) {
     var jsonUrl = "https://api.flickr.com/services/feeds/geo/?id=" + data.tripOptions.flickrId + "&lang=en-us&format=json&georss=true&tagmode=any&tags=" + tag;
     addPhotoFeed(data, mc, jsonUrl);
@@ -130,5 +162,12 @@ data.tripOptions.flickrTags.split(',').forEach(function(tag) {
 
      });
 
+	var legend = data.tripOptions.legend;
+	for (var value in legend) {
+		$('#legend-window').append("<label style='color:" + legend[value] +  "'>" + value + "</label><br>").show();
+	}
+    
 });
+
+
 

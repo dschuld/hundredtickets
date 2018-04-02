@@ -2,11 +2,19 @@
     "fusionTableApiKey": "AIzaSyA9GhptPi9rpe7U-Rxd7gZfdIB5yMx4Bd8",
     "initCenter": [-125.11281442752113, 50.20459439567605],
     "initZoom": 10,
-    "flickrId": "134819556@N06",
-    "flickrTags": "IEC,IEC2",
+    "flickrId": "156388485@N08",
+    "flickrTags": "diem,animal",
     "debugWindow": false,
     "tileServerRatio": 0.0,
     "mapboxStyle": "ciqwg8cpm001kcbm3rujigav4",
-    "mapboxKey": "pk.eyJ1IjoiZHNjaHVsZCIsImEiOiJjaXA4Mm5xazkwMDJwdXRubXBxa25peTV4In0.uCnPaGteG5-H80uO13RiOw"
+    "mapboxKey": "pk.eyJ1IjoiZHNjaHVsZCIsImEiOiJjaXA4Mm5xazkwMDJwdXRubXBxa25peTV4In0.uCnPaGteG5-H80uO13RiOw",
+	"legend": {
+		"diem": "blue",
+		"diem1": "red",
+		"diem2": "green",
+		"diem3": "yellow",
+		"diem4": "orange",
+		"diem5": "purple"
+	}
 } 
 

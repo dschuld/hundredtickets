@@ -83,6 +83,7 @@ div#googleMap {
     background-color: #BBB;
     border-radius: 5px;
     position:absolute;
+	margin:5px;
     border-radius: 5px 5px 5px 5px;
     padding: 10px;
     display: none;
@@ -106,6 +107,17 @@ div#googleMap {
     left: 0 !important;
     position: absolute;
     font-size: small;
+}
+
+#legend-window {
+
+    top: 5% !important;
+    left: 10px !important;
+    position: absolute;
+    background-color: #BBB;
+	border-radius: 5px;
+    padding: 5px;
+	//transform: translate(0%, 150%);
 }
 
 #about-window {
