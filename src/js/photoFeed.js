@@ -22,29 +22,45 @@
 var s11 = s11 || {};
 
 var photoFeed_PLUGIN_ID = "photoFeed";
+var photoDimensionsCache = {};
+var markerCacheByTag = {};
 
 var photoFeedWindow = function () {
 
     return {
-        show: function (pos, picture, flickrLink, map) {
+        show: function (pos, picture, flickrLink, title, map) {
             var point = s11.util.fromLatLngToPoint(pos, map);
 			var w = map.getDiv().offsetWidth;
 			var h = map.getDiv().offsetHeight;
-			var alignment = {
-                'left': point.x
-            }
+			var alignment = {};
 			
-			//TODO alignment not hardcoded - retrieve outerHeight when thumbnail is loaded and reposition div
-			//pics have to be loaded first
-			//if (point.y > h/2) {
-              //  alignment['top'] = point.y - 270;
-			//}  else {
-                alignment['top'] = point.y;
-			//}
+			
+			if (title in photoDimensionsCache && photoDimensionsCache[title]['w'] > 50) {
+				var photoHeight = photoDimensionsCache[title]['h'];
+				var photoWidth = photoDimensionsCache[title]['w'];
+			} else {
+				var photoHeight = $('#photoFeed-window').outerHeight();
+				var photoWidth = $('#photoFeed-window').outerWidth();
+			}   
+			
+			
+			var photoY = point.y > h/2? point.y - photoHeight - 6 : point.y;
+			var photoX = point.x  + photoWidth > w? point.x - photoWidth - 6 : point.x;
+			
+            alignment['top'] = photoY;
+		    alignment['left'] = photoX;
+		
             var tt = $('#photoFeed-window');
-            tt = tt.html(createThumbnailHtml(picture, flickrLink)).css(alignment);
-            tt.show();
-			var height = $('#photoFeed-window').height();
+            tt = tt.html(createThumbnailHtml(picture, title, flickrLink)).css(alignment);
+            tt.show(0, function() {
+				
+				var photoWidth = $('#photoFeed-window').outerWidth();
+				if ($('#photoFeed-window').outerWidth() > 50) {
+					photoDimensionsCache[title]['w'] = $('#photoFeed-window').outerWidth();
+					photoDimensionsCache[title]['h'] = $('#photoFeed-window').outerHeight();
+				}
+				return;
+			});
 			return;
 
         },
@@ -55,11 +71,11 @@ var photoFeedWindow = function () {
 
 }();
 
-var createThumbnailHtml = function (picture, flickrLink) {
+var createThumbnailHtml = function (picture, title, flickrLink) {
     var imageString = '<a href="' + flickrLink + '"  target="_blank"><img src="' + picture + '" height="auto" width="auto" /></a>';
 
     var contentString =
-            '<div >' + imageString + '</div>';
+            '<div >' + imageString + '<p>' + title + '<br></div>';
 
     return contentString;
 };
@@ -82,15 +98,25 @@ var addPhotoFeed = function (appData, mc, jsonUrl) {
     console.log(jsonUrl);
     jsonFlickrFeed = function (feedObject) {
         feedObject.items.map(function (entry) {
-            return {
+			var width = parseInt($($.parseHTML(entry.description)).find('img').attr('width')) + 25;
+			var height = parseInt($($.parseHTML(entry.description)).find('img').attr('height')) + 50;
+			photoDimensionsCache[entry.title] = {w:width, h:height};
+			return {
                 picture: entry.media.m,
                 flickrLink: entry.link,
                 date: entry.date_taken,
                 lat: entry.latitude,
                 lng: entry.longitude,
-				tag: extractLegendTagFromPhotoTags(entry.tags, appData.tripOptions.legend)
+				tag: extractLegendTagFromPhotoTags(entry.tags, appData.tripOptions.legend),
+				title: entry.title
             };
         }).forEach(function (photo) {
+			
+			if (!(photo.tag in markerCacheByTag)) {
+				markerCacheByTag[photo.tag] = new Array();
+			}
+			
+			
             var location = appData.factory.createLatLng(photo.lat, photo.lng);
 			var legend = appData.tripOptions.legend;
 			var color = legend[photo.tag];
@@ -104,9 +130,9 @@ var addPhotoFeed = function (appData, mc, jsonUrl) {
 				strokeWeight: 0
 			}
 			
-			//Pass icon drive link as second param for non-default
             var photoMarker = s11.geomodel.Place.createFromData("", icon, location);
             photoMarker.setMap(appData.map);
+			markerCacheByTag[photo.tag].push(photoMarker);
 
             mc.addMarker(photoMarker.getMarker());
             appData.factory.addEventListener(photoMarker.getMarker(), 'mouseout', function () {
@@ -118,9 +144,11 @@ var addPhotoFeed = function (appData, mc, jsonUrl) {
             });
             appData.factory.addEventListener(photoMarker.getMarker(), 'mouseover', function (e) {
 
-                photoFeedWindow.show(e.latLng, photo.picture, photo.flickrLink, appData.map);
+                photoFeedWindow.show(e.latLng, photo.picture, photo.flickrLink, photo.title, appData.map);
 
             });
+			
+			
         });
     };
 
@@ -137,18 +165,25 @@ var addPhotoFeed = function (appData, mc, jsonUrl) {
 	
 };
 
-var createPhotoWindowContent = function (picture, flickrLink) {
+/*
+ * Shows and hides the photo markers on the map when the checkbox for a specific tag is clicked.
+ * Apparently the addMarker() and removeMarker() methods of MarkerClusterer take care of showing and hiding
+ * the markers, so we don't have to manually call marker.setMap() 
+ */
+var updateMarkers = function(mc, tag, checked, map) {
+	var cache = markerCacheByTag[tag];
+	cache.forEach(function(marker) {
+		if (checked) {
+			mc.addMarker(marker.getMarker());
+		} else {
+			mc.removeMarker(marker.getMarker());
+		}
+		
+	});
+	return;
+		
+}
 
-    var imageString = '<a href="' + flickrLink + '"  target="_blank"><img src="' + picture + '" height="auto" width="auto" /></a>';
-
-    var contentString = '<div id="iw-container">' +
-            '<div class="iw-content">' +
-            imageString +
-            '</div>' +
-            '</div>';
-
-    return contentString;
-};
 
 s11.pluginLoader.addPlugin(photoFeed_PLUGIN_ID,function(data)
 {
@@ -164,7 +199,13 @@ data.tripOptions.flickrTags.split(',').forEach(function(tag) {
 
 	var legend = data.tripOptions.legend;
 	for (var value in legend) {
-		$('#legend-window').append("<label style='color:" + legend[value] +  "'>" + value + "</label><br>").show();
+		$('#legend-window').append("<label style='color:" + legend[value] +  "'><input type='checkbox' checked='checked' id='" + value + "'>" + value + "</label><br>").show();
+		$(":checkbox").change(function(e) {
+			var checked = e.target.checked;
+			var tag = e.target.id;
+			updateMarkers(mc, tag, checked, map);
+			return;
+		});
 	}
     
 });

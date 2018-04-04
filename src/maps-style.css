@@ -111,7 +111,7 @@ div#googleMap {
 
 #legend-window {
 
-    top: 5% !important;
+    top: 10% !important;
     left: 10px !important;
     position: absolute;
     background-color: #BBB;

@@ -60,7 +60,7 @@ function initialize(mapStyle) {
     map = factory.createMap(tripOptions.initCenter[1], tripOptions.initCenter[0], tripOptions.initZoom, 'googleMap', tripOptions.mapboxKey, tripOptions.mapboxStyle, mapStyle);
 
 
-    map.setMapTypeId(Math.random() > tripOptions.tileServerRatio ? google.maps.MapTypeId.TERRAIN : s11.util.MapTypeId.MAPBOX_CUST_OUT);
+    map.setMapTypeId(Math.random() > tripOptions.tileServerRatio ? google.maps.MapTypeId.SATELLITE : s11.util.MapTypeId.MAPBOX_CUST_OUT);
 
     factory.addEventListener(map, 'click', function (e) {
         toGeoJsonTextFromLatLng(e.latLng);

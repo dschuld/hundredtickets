@@ -90,14 +90,16 @@ var factory = {
             mapTypeControl: true,
             mapTypeControlOptions: {
                 style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-                position: google.maps.ControlPosition.TOP_LEFT,
+                position: google.maps.ControlPosition.LEFT_CENTER,
                 mapTypeIds: [
-//                    google.maps.MapTypeId.SATELLITE,
+                    google.maps.MapTypeId.SATELLITE,
                     google.maps.MapTypeId.TERRAIN,
-//                    s11.util.MapTypeId.OSM,
+                    google.maps.MapTypeId.ROADMAP,
+					s11.util.MapTypeId.DIEM,
+                    s11.util.MapTypeId.OSM,
 //                    s11.util.MapTypeId.HIKEBIKE,
-//                    s11.util.MapTypeId.LANDSCAPE,
-//                    s11.util.MapTypeId.MAPBOX,
+                    s11.util.MapTypeId.LANDSCAPE,
+                    s11.util.MapTypeId.MAPBOX,
 //                    s11.util.MapTypeId.MAPBOX_SATELLITE,
 //                    s11.util.MapTypeId.MAPBOX_STREETS,
 //                    s11.util.MapTypeId.MAPBOX_OUTDOORS,
@@ -116,9 +118,9 @@ var factory = {
             streetViewControl: false,
             zoomControl: true,
             zoomControlOptions: {
-                position: google.maps.ControlPosition.LEFT_CENTER
+                position: google.maps.ControlPosition.RIGHT_CENTER
             },
-            mapTypeControl: false,
+            mapTypeControl: true,
             scaleControl: true,
             streetViewControlOptions: {
                 position: google.maps.ControlPosition.LEFT_TOP
@@ -139,10 +141,10 @@ var factory = {
 
 
         //TODO include attribution div on map, see http://www.thunderforest.com/terms/
-//        var osmOptions = createMapTypeOptions("OSM", function (coord, zoom) {
-//            return "http://otile1.mqcdn.com/tiles/1.0.0/osm/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
-//        });
-//        registerMapType(map, osmOptions, s11.util.MapTypeId.OSM);
+        var osmOptions = createMapTypeOptions("OSM", function (coord, zoom) {
+            return "http://otile1.mqcdn.com/tiles/1.0.0/osm/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
+        });
+        registerMapType(map, osmOptions, s11.util.MapTypeId.OSM);
 //
 //
 //        var hikeBikeOptions = createMapTypeOptions("Hike & Bike", function (coord, zoom) {
@@ -151,10 +153,10 @@ var factory = {
 //        registerMapType(map, hikeBikeOptions, s11.util.MapTypeId.HIKEBIKE);
 //
 //
-//        var landscapeOptions = createMapTypeOptions("Landscape", function (coord, zoom) {
-//            return "https://a.tile.thunderforest.com/landscape/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
-//        });
-//        registerMapType(map, landscapeOptions, s11.util.MapTypeId.LANDSCAPE);
+        var landscapeOptions = createMapTypeOptions("Landscape", function (coord, zoom) {
+            return "https://a.tile.thunderforest.com/landscape/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
+        });
+        registerMapType(map, landscapeOptions, s11.util.MapTypeId.LANDSCAPE);
 //
 //        var pioneerMap = createMapTypeOptions("Pioneer", function (coord, zoom) {
 //            return "https://a.tile.thunderforest.com/pioneer/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
@@ -162,11 +164,11 @@ var factory = {
 //        registerMapType(map, pioneerMap, s11.util.MapTypeId.PIONEER);
 //
 //
-//        var mapboxMap = createMapTypeOptions("Mapbox", function (coord, zoom) {
-//            return "https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=pk.eyJ1IjoiZHNjaHVsZCIsImEiOiJjaXA4Mm5xazkwMDJwdXRubXBxa25peTV4In0.uCnPaGteG5-H80uO13RiOw";
-//        });
-//        registerMapType(map, mapboxMap, s11.util.MapTypeId.MAPBOX);
-//
+        var mapboxMap = createMapTypeOptions("Mapbox", function (coord, zoom) {
+            return "https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=pk.eyJ1IjoiZHNjaHVsZCIsImEiOiJjaXA4Mm5xazkwMDJwdXRubXBxa25peTV4In0.uCnPaGteG5-H80uO13RiOw";
+        });
+        registerMapType(map, mapboxMap, s11.util.MapTypeId.MAPBOX);
+
 //
 //        var mapboxMap = createMapTypeOptions("Mapbox-Sat", function (coord, zoom) {
 //            return "https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=pk.eyJ1IjoiZHNjaHVsZCIsImEiOiJjaXA4Mm5xazkwMDJwdXRubXBxa25peTV4In0.uCnPaGteG5-H80uO13RiOw";
@@ -204,10 +206,28 @@ var factory = {
 //        registerMapType(map, outdoorsMap, s11.util.MapTypeId.OUTDOORS);
 
         map.setMapTypeId(google.maps.MapTypeId.TERRAIN);
+		
+		map.addListener('maptypeid_changed', function() {
+			toggleImageOverlay(map.getMapTypeId() === google.maps.MapTypeId.ROADMAP);
+		});
+	
 
         return map;
     }
 };
+
+var imageBounds = {
+    north: 50.279077314177246,
+    south: 50.120336665230634,
+    east: -125.00943042402092,
+    west: -125.16394090269381
+};
+discoveryOverlay = new google.maps.GroundOverlay('./discovery_overlay.png',imageBounds);
+
+var toggleImageOverlay = function(flag) {
+	
+	discoveryOverlay.setMap(flag? map : null);
+}
 
 var registerMapType = function (map, options, mapTypeId) {
 
