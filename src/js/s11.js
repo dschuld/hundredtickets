@@ -21,7 +21,7 @@ var s11 = s11 || {};
 var factory = s11.geomodel.getFactory();
 var wpdata = wpdata || {};
 
-var tripOptions;
+var config;
 
 
 $(document).ready(function () {
@@ -35,12 +35,12 @@ function centerMap(lat, lng) {
 function readOptions() {
 
 
-    var optionsUrl = wpdata.tripOptionsUrl ? wpdata.tripOptionsUrl : './tripOptions.json';
+    var optionsUrl = wpdata.configUrl ? wpdata.configUrl : './config.json';
 
     var styleUrl = wpdata.mapStyleUrl ? wpdata.mapStyleUrl : '../config/mapStyle.json';
 
     $.getJSON(optionsUrl, function (optionsJson) {
-        tripOptions = optionsJson;
+        config = optionsJson;
 
         $.getJSON(styleUrl, function (styleJson) {
             initialize(styleJson);
@@ -57,10 +57,10 @@ function initialize(mapStyle) {
 
 
 
-    map = factory.createMap(tripOptions.initCenter[1], tripOptions.initCenter[0], tripOptions.initZoom, 'googleMap', tripOptions.mapboxKey, tripOptions.mapboxStyle, mapStyle);
+    map = factory.createMap(config.initCenter[1], config.initCenter[0], config.initZoom, 'googleMap', config.mapboxKey, config.mapboxStyle, mapStyle);
 
 
-    map.setMapTypeId(Math.random() > tripOptions.tileServerRatio ? google.maps.MapTypeId.SATELLITE : s11.util.MapTypeId.MAPBOX_CUST_OUT);
+    map.setMapTypeId(Math.random() > config.tileServerRatio ? google.maps.MapTypeId.SATELLITE : s11.util.MapTypeId.MAPBOX_CUST_OUT);
 
     factory.addEventListener(map, 'click', function (e) {
         toGeoJsonTextFromLatLng(e.latLng);
@@ -102,7 +102,7 @@ function initialize(mapStyle) {
         "map": map,
         "trip": trip,
         "factory": factory,
-        "tripOptions": tripOptions,
+        "config": config,
         "log": function (message) {
             log(message);
         }
@@ -111,7 +111,7 @@ function initialize(mapStyle) {
 
     s11.pluginLoader.init(globalData);
 
-    if (tripOptions.debugWindow) {
+    if (config.debugWindow) {
         $('#debug-window').html("<textarea id='debug' readonly='true'>").show();
     }
 

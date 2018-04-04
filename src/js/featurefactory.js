@@ -223,7 +223,7 @@ var imageBounds = {
     west: -125.16394090269381
 };
 discoveryOverlay = new google.maps.GroundOverlay('./discovery_overlay.png',imageBounds);
-
+	
 var toggleImageOverlay = function(flag) {
 	
 	discoveryOverlay.setMap(flag? map : null);

@@ -107,7 +107,7 @@ var addPhotoFeed = function (appData, mc, jsonUrl) {
                 date: entry.date_taken,
                 lat: entry.latitude,
                 lng: entry.longitude,
-				tag: extractLegendTagFromPhotoTags(entry.tags, appData.tripOptions.legend),
+				tag: extractLegendTagFromPhotoTags(entry.tags, appData.config.legend),
 				title: entry.title
             };
         }).forEach(function (photo) {
@@ -118,7 +118,7 @@ var addPhotoFeed = function (appData, mc, jsonUrl) {
 			
 			
             var location = appData.factory.createLatLng(photo.lat, photo.lng);
-			var legend = appData.tripOptions.legend;
+			var legend = appData.config.legend;
 			var color = legend[photo.tag];
 			
 			var icon = {
@@ -190,14 +190,14 @@ s11.pluginLoader.addPlugin(photoFeed_PLUGIN_ID,function(data)
 	
  
 var mc = new MarkerClusterer(map, [], {gridSize: 20, imagePath: 'js/m'});
-data.tripOptions.flickrTags.split(',').forEach(function(tag) {
-    var jsonUrl = "https://api.flickr.com/services/feeds/geo/?id=" + data.tripOptions.flickrId + "&lang=en-us&format=json&georss=true&tagmode=any&tags=" + tag;
+data.config.flickrTags.split(',').forEach(function(tag) {
+    var jsonUrl = "https://api.flickr.com/services/feeds/geo/?id=" + data.config.flickrId + "&lang=en-us&format=json&georss=true&tagmode=any&tags=" + tag;
     addPhotoFeed(data, mc, jsonUrl);
 
 
      });
 
-	var legend = data.tripOptions.legend;
+	var legend = data.config.legend;
 	for (var value in legend) {
 		$('#legend-window').append("<label style='color:" + legend[value] +  "'><input type='checkbox' checked='checked' id='" + value + "'>" + value + "</label><br>").show();
 		$(":checkbox").change(function(e) {
