@@ -1,0 +1,32 @@
+{
+	"_comment": "This file provides configuration for features of the DIEM community maps. ",
+	
+    "debugWindow": false,
+    "fusionTableApiKey": "AIzaSyA9GhptPi9rpe7U-Rxd7gZfdIB5yMx4Bd8",
+	
+	"_geoComment": "Specify center coordinates and zoom of the area that the map will show initially. Zoom values are 1 (Max zoom out) to 19 (max zoom in)",
+    "initCenter": [-125.11281442752113, 50.20459439567605],
+    "initZoom": 10,
+	
+	"_flickrComment": "The flickrTags must be correctly specified here in order to show the photo dots on the map. Only photos are shown that have been tagged in Flickr with a tag that exactly matches one of the comma-separated values given here.     The flickrId configures which Flickr account the photos will be downloaded from and will most likely not have to be changed.",
+    "flickrId": "156388485@N08",
+    "flickrTags": "plants,animals,communities,atrisk,wildlifeuse,sweetspots,disturbed,bigtree",
+	"legend": {
+		"_comment": "The color values can be specified as color codes or names. Refer to https://www.w3schools.com/colors/colors_names.asp to see which color names are available. The tags given here specify what will be shown in the legend, and they must appear in the flickrTags element in this file.",
+		"background": "#FFF",
+		"tags": {
+			"plants": "green",
+			"animals": "#A45F29",
+			"communities": "blue",
+			"atrisk": "red",
+			"bigtree": "ForestGreen",
+			"wildlifeuse": "yellow",
+			"sweetspots": "purple",
+			"disturbed": "darkorange"
+		}
+	},
+	
+	"clustersize": "20"
+	
+} 
+

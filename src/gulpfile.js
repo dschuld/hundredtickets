@@ -63,14 +63,14 @@ gulp.task('cssnano', function () {
 
 gulp.task('htmlmin', function () {
 
-    return gulp.src(['./index.html', './transit-gen.html', './location.html', './index_cn.html', './transit-gen_cn.html', './location_cn.html'])
+    return gulp.src(['./index.html'])
             .pipe(changed('./../dist/'))
             .pipe(htmlmin({collapseWhitespace: true}))
             .pipe(gulp.dest('./../dist/'));
 });
 
 gulp.task('jshint', function () {
-    return gulp.src(["./js/util.js", './js/featurefactory.js', './js/FuTa.js', './js/data.js', './js/geomodel.js', "./js/s11_controls.js", './js/s11.js', "./js/locationIndicator.js", "./js/photoFeed.js", "./js/places.js", "./js/routes_regions.js"])
+    return gulp.src(["./js/util.js", './js/featurefactory.js', './js/FuTa.js', './js/data.js', './js/geomodel.js','./js/s11.js', "./js/photoFeed.js""])
             .pipe(jshint())
             .pipe(jshint.reporter('default'));
 });

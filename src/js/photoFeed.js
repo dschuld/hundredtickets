@@ -81,19 +81,35 @@ var createThumbnailHtml = function (picture, title, flickrLink) {
 };
 
 var extractLegendTagFromPhotoTags = function(tagString, legend) {
-	var tags = tagString.split(" ");
+	var tags = tagString.toLowerCase().split(" ");
 	var tag = "";
 	tags.forEach(function(curTag) {
-		if(curTag in legend) {
-			tag = curTag;
+		var prop = curTag.toLowerCase();
+		for(var p in legend){
+			if(legend.hasOwnProperty(p) && prop == (p+ "").toLowerCase()) {
+				tag = curTag;
+			}
 		}
 	});
 	return tag;
 }
 
+var getPropertyIgnoreCase = function(prop, obj) {
+	var val = "";
+	prop = (prop + "").toLowerCase();
+	for(var p in obj){
+		if(obj.hasOwnProperty(p) && prop == (p+ "").toLowerCase()){
+		   val = obj[p].color;
+		   break;
+		}
+	}
+	return val;
+}
+
 
 var addPhotoFeed = function (appData, mc, jsonUrl) {
 
+	var configLegend = appData.config.legend;
    
     console.log(jsonUrl);
     jsonFlickrFeed = function (feedObject) {
@@ -107,7 +123,7 @@ var addPhotoFeed = function (appData, mc, jsonUrl) {
                 date: entry.date_taken,
                 lat: entry.latitude,
                 lng: entry.longitude,
-				tag: extractLegendTagFromPhotoTags(entry.tags, appData.config.legend),
+				tag: extractLegendTagFromPhotoTags(entry.tags, configLegend.tags),
 				title: entry.title
             };
         }).forEach(function (photo) {
@@ -118,8 +134,8 @@ var addPhotoFeed = function (appData, mc, jsonUrl) {
 			
 			
             var location = appData.factory.createLatLng(photo.lat, photo.lng);
-			var legend = appData.config.legend;
-			var color = legend[photo.tag];
+			var legend = configLegend.tags;
+			var color = getPropertyIgnoreCase(photo.tag, legend);
 			
 			var icon = {
 				path: google.maps.SymbolPath.CIRCLE,
@@ -150,7 +166,7 @@ var addPhotoFeed = function (appData, mc, jsonUrl) {
 			
 			
         });
-    };
+    };	
 
     $.ajax({
         url: jsonUrl,
@@ -191,15 +207,18 @@ s11.pluginLoader.addPlugin(photoFeed_PLUGIN_ID,function(data)
  
 var mc = new MarkerClusterer(map, [], {gridSize: 20, imagePath: 'js/m'});
 data.config.flickrTags.split(',').forEach(function(tag) {
-    var jsonUrl = "https://api.flickr.com/services/feeds/geo/?id=" + data.config.flickrId + "&lang=en-us&format=json&georss=true&tagmode=any&tags=" + tag;
+    var jsonUrl = "https://api.flickr.com/services/feeds/geo/?id=" + data.config.flickrId + "&lang=en-us&format=json&georss=true&tagmode=any&tags=" + tag.toLowerCase();
     addPhotoFeed(data, mc, jsonUrl);
 
 
      });
 
-	var legend = data.config.legend;
+	var legend = data.config.legend.tags;
+	$('#legend-window').css("background-color", data.config.legend.background);
 	for (var value in legend) {
-		$('#legend-window').append("<label style='color:" + legend[value] +  "'><input type='checkbox' checked='checked' id='" + value + "'>" + value + "</label><br>").show();
+		var legendLabel = legend[value].legendLabel;
+		var color = legend[value].color;
+		$('#legend-window').append("<label style='color:" + color +  "'><input type='checkbox' checked='checked' id='" + value + "'>" + legendLabel + "</label><br>").show();
 		$(":checkbox").change(function(e) {
 			var checked = e.target.checked;
 			var tag = e.target.id;

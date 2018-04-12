@@ -37,30 +37,23 @@ function readOptions() {
 
     var optionsUrl = wpdata.configUrl ? wpdata.configUrl : './config.json';
 
-    var styleUrl = wpdata.mapStyleUrl ? wpdata.mapStyleUrl : '../config/mapStyle.json';
-
     $.getJSON(optionsUrl, function (optionsJson) {
         config = optionsJson;
-
-        $.getJSON(styleUrl, function (styleJson) {
-            initialize(styleJson);
-        });
-
-
+		initialize();
 
     });
 }
 
-function initialize(mapStyle) {
+function initialize() {
 
     focusser = s11.geomodel.getFocusser();
 
 
 
-    map = factory.createMap(config.initCenter[1], config.initCenter[0], config.initZoom, 'googleMap', config.mapboxKey, config.mapboxStyle, mapStyle);
+    map = factory.createMap(config.initCenter[1], config.initCenter[0], config.initZoom, 'googleMap');
 
 
-    map.setMapTypeId(Math.random() > config.tileServerRatio ? google.maps.MapTypeId.SATELLITE : s11.util.MapTypeId.MAPBOX_CUST_OUT);
+    map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
 
     factory.addEventListener(map, 'click', function (e) {
         toGeoJsonTextFromLatLng(e.latLng);

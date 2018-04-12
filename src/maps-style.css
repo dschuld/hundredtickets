@@ -1,5 +1,5 @@
 /*
-Copyright 2016 schuldd.
+Copyright 2016 David Schuld.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -12,6 +12,14 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+*/
+
+/*
+ *
+ * To edit the appearance of the photo windows that are shown when the mouse hovers on the colored dots, edit #photoFeed-window (and possibly iw-container and .gm-style-iw). 
+ * To edit the position and appearance of the legend, edit #legend-window.
+ * To edit the google map size, edit div#googleMap. 
+ *
 */
 
 html,
@@ -61,9 +69,6 @@ div#googleMap {
 }
 
 .gm-style-iw {
-    /*With !important here, the stupid empty area on the right is removed, but 
-    then also the photos are 650px width here. Without important is better
-    cause of automatic scaling to route pictures?*/
     width: 500px !important;
     top: 15px !important;
     left: 0 !important;
@@ -84,8 +89,7 @@ div#googleMap {
     border-radius: 5px;
     position:absolute;
 	margin:5px;
-    border-radius: 5px 5px 5px 5px;
-    padding: 10px;
+    padding: 5px;
     display: none;
 }
 
@@ -111,88 +115,18 @@ div#googleMap {
 
 #legend-window {
 
-    top: 10% !important;
+    top: 3% !important;
     left: 10px !important;
     position: absolute;
-    background-color: #BBB;
 	border-radius: 5px;
     padding: 5px;
-	//transform: translate(0%, 150%);
 }
-
-#about-window {
-    width: 66% !important;
-    font-size: 13px;
-    line-height: 20px;
-    font-weight: 400;
-    z-index: 100;
-    display: none;
-    margin: auto;
-    top: 50px !important;
-    position: relative;
-    /*opacity: 0.9;*/
-    padding: 10px; 
-}
-
 .about-window-content {
     padding: 10px;
     text-align: left;
 }
 
 
-.about-window-footer {
-    display: table;
-    table-layout: fixed;
-    text-align: center;
-    /*margin: 20px;*/
-    width:90%;
-    /*border: 1px solid red;*/
-}
-
-.about-window-button {    
-    display: table-cell;
-    margin: 80px;
-    /*border: 1px solid blue;*/
-
-}
-
-textarea {
-    /*width: 350px;*/
-    /*height: 250px;*/ 
-    padding: 5px 5px;
-    box-sizing: border-box;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    background-color: #f8f8f8;
-    opacity: 0.9; 
-}
-
-.control-container {
-    display: inline-block;
-    padding: 3px;
-}
-
-
-.control-div {
-    /*    border-style: solid;
-        border-width: 1px;
-        border-color: black;*/
-    background-color: white;
-    display: inline-flex;
-    padding: 3px;
-    margin: 1px;
-    box-shadow: 1px 1px 2px rgba(0,0,0,.3);
-    opacity: 0.9;
-    border-radius: 2px;
-}
-
-.control-button-div {
-    height: 25px;
-    padding: 0;
-    width: 25px;
-    background-size: contain;
-
-}
 
 
 

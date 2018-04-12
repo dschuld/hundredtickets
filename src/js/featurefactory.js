@@ -77,10 +77,10 @@ var factory = {
     encodePath: function (path) {
         return google.maps.geometry.encoding.encodePath(path);
     },
-    createMap: function (lat, lng, zoom, mapDivId, mapboxKey, mapboxStyle, styles) {
+    createMap: function (lat, lng, zoom, mapDivId) {
         if (!zoom) {
             zoom = 3;
-        }        
+        }      
 
         var mapProp = {
             center: new google.maps.LatLng(lat, lng),
@@ -93,25 +93,11 @@ var factory = {
                 position: google.maps.ControlPosition.LEFT_CENTER,
                 mapTypeIds: [
                     google.maps.MapTypeId.SATELLITE,
-                    google.maps.MapTypeId.TERRAIN,
                     google.maps.MapTypeId.ROADMAP,
-					s11.util.MapTypeId.DIEM,
-                    s11.util.MapTypeId.OSM,
-//                    s11.util.MapTypeId.HIKEBIKE,
-                    s11.util.MapTypeId.LANDSCAPE,
-                    s11.util.MapTypeId.MAPBOX,
-//                    s11.util.MapTypeId.MAPBOX_SATELLITE,
-//                    s11.util.MapTypeId.MAPBOX_STREETS,
-//                    s11.util.MapTypeId.MAPBOX_OUTDOORS,
-//                    s11.util.MapTypeId.MAPBOX_CUST,
-//                    s11.util.MapTypeId.PIONEER,
-//                    s11.util.MapTypeId.OTM,
-//                    s11.util.MapTypeId.OUTDOORS,
-                    s11.util.MapTypeId.MAPBOX_CUST_OUT
-
-
-
-
+					google.maps.MapTypeId.TERRAIN,
+					s11.util.MapTypeId.MAPBOX_STREETS_READ_OVERLAY,
+					s11.util.MapTypeId.MAPBOX_STREETS_QUADRA_OVERLAY,
+					s11.util.MapTypeId.MAPBOX_STREETS_CORTES_OVERLAY
                 ]
 
             },
@@ -122,93 +108,31 @@ var factory = {
             },
             mapTypeControl: true,
             scaleControl: true,
-            streetViewControlOptions: {
-                position: google.maps.ControlPosition.LEFT_TOP
-            },
-            styles: styles,
             disableDoubleClickZoom: true
         };
 
         var map = new google.maps.Map(document.getElementById(mapDivId), mapProp);
-
-
-
-
-        var mapboxMap = createMapTypeOptions("Mapbox-Cust-Out", function (coord, zoom) {
-            return "https://api.mapbox.com/styles/v1/dschuld/" + mapboxStyle + "/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=" + mapboxKey;
+       
+		
+        var readMap = createMapTypeOptions("Read Island", function (coord, zoom) {
+            return "https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=pk.eyJ1IjoiZHNjaHVsZCIsImEiOiJjaXA4Mm5xazkwMDJwdXRubXBxa25peTV4In0.uCnPaGteG5-H80uO13RiOw";
         });
-        registerMapType(map, mapboxMap, s11.util.MapTypeId.MAPBOX_CUST_OUT);
-
-
-        //TODO include attribution div on map, see http://www.thunderforest.com/terms/
-        var osmOptions = createMapTypeOptions("OSM", function (coord, zoom) {
-            return "http://otile1.mqcdn.com/tiles/1.0.0/osm/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
+        registerMapType(map, readMap, s11.util.MapTypeId.MAPBOX_STREETS_READ_OVERLAY);
+		
+        var quadraMap = createMapTypeOptions("Quadra Island", function (coord, zoom) {
+            return "https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=pk.eyJ1IjoiZHNjaHVsZCIsImEiOiJjaXA4Mm5xazkwMDJwdXRubXBxa25peTV4In0.uCnPaGteG5-H80uO13RiOw";
         });
-        registerMapType(map, osmOptions, s11.util.MapTypeId.OSM);
-//
-//
-//        var hikeBikeOptions = createMapTypeOptions("Hike & Bike", function (coord, zoom) {
-//            return "http://a.tiles.wmflabs.org/hikebike/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
-//        });
-//        registerMapType(map, hikeBikeOptions, s11.util.MapTypeId.HIKEBIKE);
-//
-//
-        var landscapeOptions = createMapTypeOptions("Landscape", function (coord, zoom) {
-            return "https://a.tile.thunderforest.com/landscape/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
+        registerMapType(map, quadraMap, s11.util.MapTypeId.MAPBOX_STREETS_QUADRA_OVERLAY);
+		
+        var cortesMap = createMapTypeOptions("Cortes Island", function (coord, zoom) {
+            return "https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=pk.eyJ1IjoiZHNjaHVsZCIsImEiOiJjaXA4Mm5xazkwMDJwdXRubXBxa25peTV4In0.uCnPaGteG5-H80uO13RiOw";
         });
-        registerMapType(map, landscapeOptions, s11.util.MapTypeId.LANDSCAPE);
-//
-//        var pioneerMap = createMapTypeOptions("Pioneer", function (coord, zoom) {
-//            return "https://a.tile.thunderforest.com/pioneer/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
-//        });
-//        registerMapType(map, pioneerMap, s11.util.MapTypeId.PIONEER);
-//
-//
-        var mapboxMap = createMapTypeOptions("Mapbox", function (coord, zoom) {
-            return "https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=pk.eyJ1IjoiZHNjaHVsZCIsImEiOiJjaXA4Mm5xazkwMDJwdXRubXBxa25peTV4In0.uCnPaGteG5-H80uO13RiOw";
-        });
-        registerMapType(map, mapboxMap, s11.util.MapTypeId.MAPBOX);
+        registerMapType(map, cortesMap, s11.util.MapTypeId.MAPBOX_STREETS_CORTES_OVERLAY);
 
-//
-//        var mapboxMap = createMapTypeOptions("Mapbox-Sat", function (coord, zoom) {
-//            return "https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=pk.eyJ1IjoiZHNjaHVsZCIsImEiOiJjaXA4Mm5xazkwMDJwdXRubXBxa25peTV4In0.uCnPaGteG5-H80uO13RiOw";
-//        });
-//        registerMapType(map, mapboxMap, s11.util.MapTypeId.MAPBOX_SATELLITE);
-//
-//
-//        var mapboxMap = createMapTypeOptions("Mapbox-Streets", function (coord, zoom) {
-//            return "https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=" + mapboxKey;
-//        });
-//        registerMapType(map, mapboxMap, s11.util.MapTypeId.MAPBOX_STREETS);
-//
-//        var mapboxMap = createMapTypeOptions("Mapbox-Outdoors", function (coord, zoom) {
-//            return "https://api.mapbox.com/styles/v1/mapbox/outdoors-v9/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=" + mapboxKey;
-//        });
-//        registerMapType(map, mapboxMap, s11.util.MapTypeId.MAPBOX_OUTDOORS);
-//
-//        var mapboxMap = createMapTypeOptions("Mapbox-Cust", function (coord, zoom) {
-//            return "https://api.mapbox.com/styles/v1/dschuld/cip80f3cr0023cunsqdt0leuz/tiles/" + zoom + "/" + coord.x + "/" + coord.y + "?access_token=" + mapboxKey;
-//        });
-//        registerMapType(map, mapboxMap, s11.util.MapTypeId.MAPBOX_CUST);
-//
-//
-//
-//
-//        var openTopoMap = createMapTypeOptions("OpenTopoMap", function (coord, zoom) {
-//            return "https://a.tile.opentopomap.org/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
-//        });
-//        registerMapType(map, openTopoMap, s11.util.MapTypeId.OTM);
-//
-//
-//        var outdoorsMap = createMapTypeOptions("Outdoors", function (coord, zoom) {
-//            return "https://a.tile.thunderforest.com/outdoors/" + zoom + "/" + coord.x + "/" + coord.y + ".png";
-//        });
-//        registerMapType(map, outdoorsMap, s11.util.MapTypeId.OUTDOORS);
-
-        map.setMapTypeId(google.maps.MapTypeId.TERRAIN);
+        map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
 		
 		map.addListener('maptypeid_changed', function() {
-			toggleImageOverlay(map.getMapTypeId() === google.maps.MapTypeId.ROADMAP);
+			toggleImageOverlay(map.getMapTypeId());
 		});
 	
 
@@ -216,17 +140,37 @@ var factory = {
     }
 };
 
-var imageBounds = {
-    north: 50.279077314177246,
-    south: 50.120336665230634,
-    east: -125.00943042402092,
-    west: -125.16394090269381
+var readBounds = {
+		north: 50.279077314177246,
+		south: 50.120336665230634,
+		east: -125.00943042402092,
+		west: -125.16394090269381
 };
-discoveryOverlay = new google.maps.GroundOverlay('./discovery_overlay.png',imageBounds);
+
+var cortesBounds = {
+		north: 50.242541737828816,
+		south: 50.00685825162496,
+		east: -124.834453037515,
+		west: -125.1157062633709
+};
+	
+var quadraBounds = {
+		north: 50.30790283839058,
+		south: 49.99081741870277,
+		east: -125.06904427114364,
+		west: -125.43428980740612
+};	
+	
+	
+readOverlay = new google.maps.GroundOverlay('./read_overlay.png',readBounds);
+quadraOverlay = new google.maps.GroundOverlay('./quadra_overlay.png',quadraBounds);
+cortesOverlay = new google.maps.GroundOverlay('./cortes_overlay.png',cortesBounds);
 	
 var toggleImageOverlay = function(flag) {
 	
-	discoveryOverlay.setMap(flag? map : null);
+	readOverlay.setMap(flag === s11.util.MapTypeId.MAPBOX_STREETS_READ_OVERLAY? map : null);
+	quadraOverlay.setMap(flag === s11.util.MapTypeId.MAPBOX_STREETS_QUADRA_OVERLAY? map : null);
+	cortesOverlay.setMap(flag === s11.util.MapTypeId.MAPBOX_STREETS_CORTES_OVERLAY? map : null);
 }
 
 var registerMapType = function (map, options, mapTypeId) {

@@ -94,7 +94,10 @@ s11.util.MapTypeId.MAPBOX_STREETS = "mapbox-streets";
 s11.util.MapTypeId.MAPBOX_CUST = "mapbox-cust";
 s11.util.MapTypeId.MAPBOX_OUTDOORS = "mapbox-outdoors";
 s11.util.MapTypeId.MAPBOX_CUST_OUT = "mapbox-cust-out";
-s11.util.MapTypeId.DIEM = "diem-image-overlay";
+s11.util.MapTypeId.MAPBOX_STREETS_READ_OVERLAY = "mapbox-streets-read-overlay";
+s11.util.MapTypeId.MAPBOX_STREETS_QUADRA_OVERLAY = "mapbox-streets-quadra-overlay";
+s11.util.MapTypeId.MAPBOX_STREETS_CORTES_OVERLAY = "mapbox-streets-cortes-overlay";
+
 
 
 
