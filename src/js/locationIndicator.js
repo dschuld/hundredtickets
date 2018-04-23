@@ -45,7 +45,7 @@ var callback = function (locationData, appData, locationIconPath) {
     var myLocation = s11.geomodel.Place.createFromData(locationText, locationIconPath, location);
     var map = appData.map;
     appData.trip.addPlaces(myLocation);
-    centerMap(locationData.coordinates[0], locationData.coordinates[1]);
+    //centerMap(locationData.coordinates[0], locationData.coordinates[1]);
 
     var latlng = {lat: location.lat(), lng: location.lng()};
     addGeocodeInfo(latlng, myLocation);
