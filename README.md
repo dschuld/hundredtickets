@@ -16,4 +16,4 @@ hundredtickets depends on
 - [GeoJSON-to-Google-Maps](https://github.com/maxogden/GeoJSON-to-Google-Maps)
 
 ## License
-hundredtickets is [Apache 2.0](README.MD) licensed.
+hundredtickets is [Apache 2.0](README.md) licensed.
