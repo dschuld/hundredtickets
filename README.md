@@ -8,6 +8,8 @@ The app lets you
 - Access your Flickr account from the app and show geotagged photos at the point they were taken
 - Access your own location and show a marker on the map to indicate where in the world you are right now
 
+[twentythirteen-hundredtickets](https://github.com/dschuld/twentythirteen-hundredtickets) embeds this app into a Wordpress theme that lets you link the blog posts to the map's content. This theme is used to run hundredtickets.net. 
+
 ## Dependencies
 hundredtickets depends on
 - [JQuery](http://jquery.com/)
