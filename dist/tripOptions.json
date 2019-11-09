@@ -6,8 +6,9 @@
     "regions": {
         "color": "#43709c"
     },
+    "routesTableName": "S11-ROUTES-PROD",
     "initCenter": [58.0078125, 37.5794125],
-    "initZoom": 4,
+    "initZoom": 3,
     "flickrId": "134819556@N06",
     "flickrTags": "S11,S12,S13,S14,S15",
     "debugWindow": false,

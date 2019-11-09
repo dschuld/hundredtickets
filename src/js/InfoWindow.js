@@ -29,7 +29,11 @@ var configureInfowindow = function (infoWindow) {
      * and before the opening of the infowindow defined styles
      * are applied.
      */
-    factory.addEventListener(infoWindow, 'domready', function () {
+    
+    //I deactivated this EventListener, because since sometime late 2019 the 
+    //'domready' event was not caught anymore and the IW was never properly
+    //configured. Seems to work with just executing the code straight away.
+//    factory.addEventListener(infoWindow, 'domready', function () {
 
 //TODO probably better to do it without infowindow
 //http://stackoverflow.com/questions/19497727/how-do-i-create-a-tooltip-with-overflow-visible-in-google-maps-v3
@@ -80,7 +84,7 @@ var configureInfowindow = function (infoWindow) {
             $(this).css({opacity: '1'});
         });
 
-    });
+//    });
 };
 
 
@@ -307,6 +311,7 @@ s11.ui.InfoWindow = function () {
                     if (content) {
                         infoWindow.setContent(content);
                         infoWindow.setPosition(e.latLng);
+                        log("Open IW at "+ e.latLng.lat() + "," + e.latLng.lng());
                         infoWindow.open(this.map);
                     }
                 });

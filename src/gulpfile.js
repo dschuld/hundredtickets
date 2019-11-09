@@ -32,9 +32,7 @@ var devDir = process.env.LOCAL_DEV_THEME_DIR;
 var prodDir = process.env.LOCAL_PROD_THEME_DIR;
 
 
-gulp.task('default', ['scripts', 'conf', 'cssnano', 'htmlmin'], function () {
-    //default aggregator
-});
+
 
 gulp.task('scripts-non-ugly', function () {
     return gulp.src(["./js/libs/async/async.js", "./js/libs/markerclusterer/markerclusterer_compiled.js", "./js/libs/geojson/GeoJSON.js", "./js/pluginLoader.js", "./js/wpApi.js", "./js/FuTa.js", "./js/featurefactory.js", "./js/util.js", "./js/InfoWindow.js", "./js/geomodel.js", "./js/s11_controls.js", "./js/data.js", "./js/s11.js", "./js/locationIndicator.js", "./js/photoFeed.js", "./js/places.js", "./js/routes_regions.js", "./js/help-control.js"])
@@ -43,11 +41,11 @@ gulp.task('scripts-non-ugly', function () {
             .pipe(gulp.dest('./../dist/'));
 });
 
-gulp.task('scripts', ['scripts-non-ugly'], function () {
+gulp.task('scripts', gulp.series('scripts-non-ugly', function () {
     return gulp.src(['./../dist/all.js'])
             .pipe(uglify())
             .pipe(gulp.dest('./../dist/'));
-});
+}));
 
 gulp.task('conf', function () {
     return gulp.src(['../config/*.json'])
@@ -63,7 +61,7 @@ gulp.task('cssnano', function () {
 
 gulp.task('htmlmin', function () {
 
-    return gulp.src(['./index.html', './transit-gen.html', './location.html', './index_cn.html', './transit-gen_cn.html', './location_cn.html'])
+    return gulp.src(['./index.html', './transit-gen.html', './location.html', './transit-gen_cn.html', './location_cn.html'])
             .pipe(changed('./../dist/'))
             .pipe(htmlmin({collapseWhitespace: true}))
             .pipe(gulp.dest('./../dist/'));
@@ -75,29 +73,29 @@ gulp.task('jshint', function () {
             .pipe(jshint.reporter('default'));
 });
 
+gulp.task('default', gulp.series('scripts', 'conf', 'cssnano', 'htmlmin', function () {
+    //default aggregator
+}));
 
-gulp.task('deploy-themes', ['deploy-theme-prod','deploy-theme-dev'], function () {
-    //aggregator task
 
-});
 
 /*
  * Deploys the uglified sources to the wordpress theme
  */
-gulp.task('deploy-theme-prod', ['default'], function () {
+gulp.task('deploy-theme-prod', gulp.series('default', function () {
     gulp.src(['./../dist/all.js', './../dist/*.json'])
             .pipe(gulp.dest(prodDir + '/js'));
 
     return gulp.src(['./../dist/maps-style.css'])
             .pipe(gulp.dest(prodDir));
 
-});
+}));
 
 
 /*
  * Deploys the non-uglified sources to the wordpress theme 
  */
-gulp.task('deploy-theme-dev', ['scripts-non-ugly', 'conf'], function () {
+gulp.task('deploy-theme-dev', gulp.series('scripts-non-ugly', 'conf', function () {
     gulp.src(['./../dist/all.js'])
             .pipe(gulp.dest(devDir + '/js'));
 
@@ -106,7 +104,12 @@ gulp.task('deploy-theme-dev', ['scripts-non-ugly', 'conf'], function () {
 
     return  gulp.src(['./../dist/*.json'])
             .pipe(gulp.dest(devDir + '/js'));
-});
+}));
+
+gulp.task('deploy-themes', gulp.series('deploy-theme-prod','deploy-theme-dev', function () {
+    //aggregator task
+
+}));
 
 gulp.task('deploy-local-appengine', function () {
     return gulp.src(['./../dist/**'])
