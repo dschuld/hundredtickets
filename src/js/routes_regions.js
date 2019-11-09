@@ -75,6 +75,58 @@ var routeDataHandlerJson = function (curRoute, data, map, callback) {
     }
 };
 
+function queryRoutes(appData) {
+
+        //Need to disable checksum validation, apparently above a certain threshold
+        //DynamoDB does some compression stuff which causes the check to fail
+        //--> queries with max 13 items returned worked, above this it failed.
+        // see https://github.com/aws/aws-sdk-js/issues/405
+        var dynamodb = new AWS.DynamoDB({dynamoDbCrc32: false});
+
+        var queryParams = {
+            ExpressionAttributeValues: {
+                ":v1": {
+                    N: "2"
+                }
+            },
+            KeyConditionExpression: "route = :v1",
+            IndexName: 'route-index',
+            TableName: appData.tripOptions.routesTableName
+        };
+        
+        var routes = [];
+
+        dynamodb.query(queryParams, function (err, result) {
+            if (err) {
+                console.log(err, err.stack); // an error occurred
+            } else {
+
+                result.Items.forEach(function (item) {
+                    var routeId = item.route.N - 1;
+                    if (!routes[routeId]) {
+                        routes[routeId] = new s11.geomodel.Route(item.color);
+                        routes[routeId].setMap(appData.map);
+                    }
+                });
+
+                result.Items.forEach(function (item) {
+                    var route = routes[item.route.N - 1];
+                    route.addLegFromEncodedPath(item.encoded.S, item.name.S);
+                    var leg = route.getLegs()[route.getLegs().length - 1];
+                    leg.infoWindowContentProvider = s11.ui.getContentProvider(item.content? item.content.S : null, item.name.S, appData.wpApi);
+                    appData.factory.addEventListener(leg, 'click', s11.ui.InfoWindow.show);
+                    log("Adding leg " + item.name);
+                });
+
+            }
+        });
+        
+        s11.pluginLoader.onLoad(places_PLUGIN_ID, true);    
+
+
+}
+
+
 
 
 //TODO refactoring for routes, color in FuTa
@@ -170,40 +222,10 @@ function addRoutesAndRegions(appData) {
             tripOptions.regionDataTableId, tripOptions.placeDataTableId);
 //    var mekongRoute = new s11.geomodel.Route(tripOptions.routes[1].color);
 
-    async.parallel([
-        function (callback) {
-            dataProvider.selectAllVisibleRoutes(function (data) {
-                routeDataHandler(data, appData, callback);
-            });
-        }
-        ,
-        function (callback) {
-            dataProvider.selectVisibleRegions(function (data) {
-                regionDataHandler(data, appData, callback);
-            });
-        }
-//        ,
-//        //TODO river loading; this should be implemented in own plugin 
-//        //some stuff to be done, parse as GeoJSON, concatenate MultiLineString into one river
-//        //or implement whole highlighting of routes on segment hover
-//        function (callback) {
-//            riverTable = new s11.data.FusionTable('1og6eG8AkTfERYVRcFOxxh4iBMaSqp_JP_b9Tlw', {
-//                key: tripOptions.fusionTableApiKey
-//
-//            });
-//            
-//            riverTable.select("json_4326").where("name='Mekong'").execute(function(data) {
-//                routeDataHandlerJson(mekongRoute, data, map, callback);
-//            });
-//        }
-    ], function (err) {
-        if (err) {
-            s11.pluginLoader.onLoad(routes_regions_PLUGIN_ID, false);
-        } else {
-            s11.pluginLoader.onLoad(routes_regions_PLUGIN_ID, true);
-        }
-        return;
-    });
+    queryRoutes(appData);
+    
+    s11.pluginLoader.onLoad(routes_regions_PLUGIN_ID, true);
+
 }
 
 
