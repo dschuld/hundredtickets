@@ -10,10 +10,10 @@
     "initCenter": [58.0078125, 37.5794125],
     "initZoom": 3,
     "flickrId": "134819556@N06",
-    "flickrTags": "S11,S12,S13,S14,S15",
+    "flickrTags": "s11,s12,s13,s14,s15,IEC,IEC2,RWA",
     "debugWindow": false,
     "tileServerRatio": 1.0,
     "mapboxStyle": "ciqwg8cpm001kcbm3rujigav4",
     "mapboxKey": "pk.eyJ1IjoiZHNjaHVsZCIsImEiOiJjaXA4Mm5xazkwMDJwdXRubXBxa25peTV4In0.uCnPaGteG5-H80uO13RiOw"
-
 } 
+
