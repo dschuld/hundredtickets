@@ -1,5 +1,5 @@
 {
-    "fusionTableApiKey": "AIzaSyA9GhptPi9rpe7U-Rxd7gZfdIB5yMx4Bd8",
+    "fusionTableApiKey": "AIzaSyC_tzVeeSDTTQYAIstEIknMEoJ1l3IlUFE",
     "routeDataTableId": "1NcPA7KANSkdV3NUTQ0DFI9rAYnUpqjJPjZQAiI93",
     "regionDataTableId": "1Xbnhuxp1Xz0wgaX60sH3FE5JH4CLU_RKDt4pVQ07",
     "placeTableName": "S11-PLACES-PROD",
@@ -10,7 +10,7 @@
     "initCenter": [58.0078125, 37.5794125],
     "initZoom": 3,
     "flickrId": "134819556@N06",
-    "flickrTags": "s11,s12,s13,s14,s15,IEC,IEC2,RWA",
+    "flickrTags": "s11,s12,s13,s14,s15,IEC,IEC2,RWA,MISC",
     "debugWindow": false,
     "tileServerRatio": 1.0,
     "mapboxStyle": "ciqwg8cpm001kcbm3rujigav4",
